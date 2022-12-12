@@ -1,0 +1,71 @@
+{% extends 'customadmin/adminbase.html' %}
+{% load static %}
+
+  
+{% block content %}
+<section style="margin-top: 5rem;"></section>
+
+<div class="col-12">
+    <div class="card recent-sales overflow-auto">
+
+      <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+          <li class="dropdown-header text-start">
+            <h6>Filter</h6>
+          </li>
+
+          <li><a class="dropdown-item" href="#">Today</a></li>
+          <li><a class="dropdown-item" href="#">This Month</a></li>
+          <li><a class="dropdown-item" href="#">This Year</a></li>
+        </ul>
+      </div>
+
+      <div class="card-body">
+       
+        <table class="table table-borderless datatable">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Status</th>
+              <th scope="col">Block</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cr in user_det %}
+            <tr>
+              <!-- <th scope="row"><img class="img-fluid"  src="{{ cr.images.url }}" alt=""></th> -->
+              <!-- <th scope="row"><a href="#"></a></th> -->
+              <!-- <td>{{ cr.id}}</td> -->
+              <td>{{ cr.first_name}}</td>
+              <td>{{ cr.email}}</td>
+              <td>{{ cr.phone_number}}</td>
+              <td>{% if cr.is_active == True  %}
+                <button type="button" class="btn btn-outline-success">Active</button>
+                {% else %}
+                <button type="button" class="btn btn-outline-danger">Not Active</button>
+                {% endif %}
+              </td>
+              
+              <td><form action="{% url 'block_user' cr.id %}" method="POST"> 
+                {% csrf_token %}
+                {% if cr.is_active == True  %}
+                <button type="submit" class="btn btn-outline-danger">Block</button>
+                {% else %}
+                <button type="submit" class="btn btn-outline-warning">Unblock</button>
+                {% endif %}
+              </form></td>
+            </tr>
+            {% endfor %}
+          
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+  </section>
+  {% endblock  %}

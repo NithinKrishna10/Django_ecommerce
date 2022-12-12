@@ -1,0 +1,68 @@
+{% extends 'customadmin/adminbase.html' %}
+{% load static %}
+
+  
+{% block content %}
+
+
+<section style="margin-top: 5rem;">
+
+<div class="col-12 ">
+    <div class="card recent-sales overflow-auto">
+
+      <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+          <li class="dropdown-header text-start">
+            <h6>Filter</h6>
+          </li>
+
+          <li><a class="dropdown-item" href="#">Today</a></li>
+          <li><a class="dropdown-item" href="#">This Month</a></li>
+          <li><a class="dropdown-item" href="#">This Year</a></li>
+        </ul>
+      </div>
+
+      <div class="card-body">
+        
+
+        <table class="table table-borderless datatable">
+          <thead>
+            <tr>
+              <th scope="col">Image</th>
+              <th scope="col">Product</th>
+              <th scope="col">Size</th>
+              <th scope="col">Colr</th>
+              <th scope="col">Quantinty</th>
+              <th scope="col">{{products}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for prv in product_at %}
+            <tr>
+              
+              <!-- <th scope="row"><a href="#"></a></th> -->
+              <!-- <td>{{ cr.id}}</td> -->
+              <!-- <td><div></div> <img class="img-fluid"  src="{{ prv.images.url }}"> </td> -->
+              {% if prv.product == productv.product_name %}
+              <td><div style="width: 3rem;"><img class="img-fluid" src="{{ productv.images.url }}" alt=""></div></td>
+                
+              {% endif %}
+              <td>{{ prv.product}}</td>
+              <td>{{ prv.sizes }}</td>
+              <td>{{ prv.colors }}</td>
+              <td>{{ prv.quantinty }}</td>
+              
+            </tr>
+            {% endfor %}
+          
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+  </section>
+
+{% endblock %}

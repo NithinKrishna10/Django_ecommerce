@@ -1,0 +1,65 @@
+{% extends 'customadmin/adminbase.html' %}
+{% load static %}
+
+  
+{% block content %}
+
+
+<div class="col-12">
+  <div class="card recent-sales overflow-auto">
+
+    <div class="filter">
+      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <li class="dropdown-header text-start">
+          <h6>Filter</h6>
+        </li>
+
+        <li><a class="dropdown-item" href="#">Today</a></li>
+        <li><a class="dropdown-item" href="#">This Month</a></li>
+        <li><a class="dropdown-item" href="#">This Year</a></li>
+      </ul>
+    </div>
+
+    <div class="card-body">
+      <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+
+      <table class="table table-borderless datatable">
+        <thead>
+          <tr>
+            <th scope="col">Img</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Update</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cr in category %}
+          <tr>
+            <th scope="row"><div style="width: 5rem;"><img class="img-fluid" src="{{ cr.cat_image.url }}" alt=""></div></th>
+<!-- 
+            <th scope="row"><img class="img-fluid"  src="{{ cr.cat_images.url }}" alt=""></th> -->
+            <!-- <th scope="row"><a href="#"></a></th> -->
+            <!-- <td>{{ cr.id}}</td> -->
+            <td>{{ cr.category_name}}</td>
+            <td>{{ cr.description }}</td>
+            <td> <a href="{% url 'edit_category' cr.id %}">edit</a></td>
+            <td><form action="{% url 'del_category' cr.id %}" method="POST"> 
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form></td>
+          </tr>
+          {% endfor %}
+        
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+{% endblock %}

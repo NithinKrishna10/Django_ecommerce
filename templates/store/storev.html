@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="text-align: center;">
+    <h1>STORE</h1>
+</div>
+<div class="container">
+	<div class="row">
+    {% for product in products %}
+		<div class="col-md-3" style="border: 5px solid rgb(121, 129, 132); margin: auto;">
+			<div> 
+				<img class="img-fluid" src="{{ product.images.url }}" alt="">
+				</div>
+				<h4>{{ product.brand }}</h4>
+				<div style="display: flex; text-decoration: none;">
+                    <div><h6 ><a href="{{ product.get_url }}" >{{ product.product_name }}    </a></h6></div>
+                            <div style="padding-left: 55px;"><h6 class="text-end">${{ product.price }}</h6></div>
+                    
+                            </div>
+		</div>
+    {% endfor %}
+
+  
+</div>
+</div>
+
+
+{% endblock %}

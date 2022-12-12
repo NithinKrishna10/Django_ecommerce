@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <div class="container w-50 text-center p-3 my-5 bg-info">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{cform}}
+                <br>
+                <button class="btn btn-primary mb-4" type="submit">Submit</button>
+        
+            </form>
+        </div>
+    
+    </body>
+</html>

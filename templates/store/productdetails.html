@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- <h1>hai</h1>
+<div style="background-color: aqua;">
+    <h1>{{ single_product.product_name }}</h1>
+    <img class="img-fluid" src="{{ single_product.images.url }}" alt="">
+</div> -->
+
+
+<!-- ============================ COMPONENT 1 ================================= -->
+<section style="margin-top: 6rem;">
+<div class="card">
+    <div class="row no-gutters">
+        <aside class="col-md-6">
+            <article class="gallery-wrap">
+                <div class="img-big-wrap mainImage">
+                    <center><img src="{{ single_product.images.url }}"></center>
+                </div> <!-- img-big-wrap.// -->
+
+            </article> <!-- gallery-wrap .end// -->
+            <!-- <ul class="thumb">
+                <li>
+                    <a href="{{ single_product.images.url }}" target="mainImage"><img src="{{ single_product.images.url }}" alt="Product Image"></a>
+                    {% for i in product_gallery %}
+                    <a href="{{i.image.url}}" target="mainImage"><img src="{{i.image.url}}" alt="Product Image"></a>
+                    {% endfor %}
+                </li>
+            </ul> -->
+        </aside>
+        <main class="col-md-6 border-left">
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                <article class="content-body">
+
+                    <h2 class="title">{{ single_product.product_name }}</h2>
+             
+
+                    <div class="mb-3">
+                        <var class="price h4">$ {{single_product.price}}</var>
+                    </div>
+                    <div class="mb-3">
+                        <var class="price h4">Brand: {{single_product.brand}}</var>
+                        
+                        <h6>{{ product_variant.sizes}}</h6>
+                    </div>
+                    <p>Description: 
+                        {{ single_product.description }}</p>
+
+
+                    <!-- <hr> -->
+                    <div class="row">
+                        <div class="item-option-select">
+                            <h6>{{ product_variant.size}}</h6>
+                            <select name="color" class="form-control" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="small">red</option>
+                                <option value="small">blue</option>
+                               <!-- {% for s in size%} -->
+                               
+                               <!-- {% endfor%} -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="item-option-select">
+                            <h6>Select Size</h6>
+                            <select name="size" class="form-control">
+                                <option value="" disabled selected>Select</option>
+                                <!-- {% for i in product_variant.sizes %}
+                                <option value="{{ i.sizes | lower }}">{{ i.sizes | capfirst }}</option>
+                                {% endfor %} -->
+                                <option value="small">small</option>
+                                <option value="medium">medium</option>
+                                <option value="large">large</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                   
+                    {{ sizes.size}}
+                    <!-- {% for rs in sizes %}
+                    <input type="radio"  {% if variant.id == rs.id %} checked {% endif %} name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
+                    <li  {% if variant.id == rs.id %} class="active" {% endif %}>
+                        <a style=" color: #204d74;  width: 90px">
+                            ${{ rs.size }}<br> 
+                        </a>
+                    </li>
+                {% endfor %} -->
+                    {% if single_product.stock <= 0 %}
+                    <h5 class="text-danger">Out of Stock</h5>
+                    {% else %}
+                    <button type="submit" class="btn  btn-primary"> <span class="text">Add to Cart</span> <i class="fas fa-shopping-cart"></i> </button>
+                    {% endif %}
+                </article> <!-- product-info-aside .// -->
+            </form>
+        </main> <!-- col.// -->
+    </div> <!-- row.// -->
+</div>
+</section>
+{% endblock %}
