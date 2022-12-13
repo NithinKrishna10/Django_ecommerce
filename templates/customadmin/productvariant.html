@@ -29,29 +29,22 @@
         <table class="table table-borderless datatable">
           <thead>
             <tr>
-              <th scope="col">Image</th>
               <th scope="col">Product</th>
-              <th scope="col">Size</th>
-              <th scope="col">Colr</th>
-              <th scope="col">Quantinty</th>
-              <th scope="col">{{products}}</th>
+              <th scope="col">Variant Category</th>
+              <th scope="col">Value</th>
+              <th scope="col">Is Active</th>
+              <!-- <th scope="col">Created Date</th> -->
+              <!-- <th scope="col">{{products}}</th> -->
             </tr>
           </thead>
           <tbody>
-            {% for prv in product_at %}
+            {% for prv in productv %}
             <tr>
-              
-              <!-- <th scope="row"><a href="#"></a></th> -->
-              <!-- <td>{{ cr.id}}</td> -->
-              <!-- <td><div></div> <img class="img-fluid"  src="{{ prv.images.url }}"> </td> -->
-              {% if prv.product == productv.product_name %}
-              <td><div style="width: 3rem;"><img class="img-fluid" src="{{ productv.images.url }}" alt=""></div></td>
-                
-              {% endif %}
+      
               <td>{{ prv.product}}</td>
-              <td>{{ prv.sizes }}</td>
-              <td>{{ prv.colors }}</td>
-              <td>{{ prv.quantinty }}</td>
+              <td>{{ prv.variation_category }}</td>
+              <td>{{ prv.variation_value }}</td>
+              <td>{{ prv.is_active }}</td>
               
             </tr>
             {% endfor %}

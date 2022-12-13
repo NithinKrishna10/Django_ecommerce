@@ -13,8 +13,8 @@ urlpatterns = [
     path('product_manage',views.product,name='product_manage'),
     path('add_product',views.add_products,name='add_product'),
     path('edit_product/<str:pk>/', views.edit_product, name='edit_product'),
-    path('product_attribute',views.product_attribute,name='product_attribute'),
-    path('addproduct_attribute',views.addproduct_attribute,name='addproduct_attribute'),
+    path('variations',views.variations,name='variations'),
+    path('addVariations',views.addVariations,name='addVariations'),
     # =================================== category ===================================
 
     path('category',views.category,name='category'),

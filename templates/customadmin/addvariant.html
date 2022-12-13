@@ -18,30 +18,30 @@
             <form action=""  method="POST">
                 {% csrf_token %}
               <div class="row mb-3">
-                <label for="inputText" class="col-sm-2 col-form-label">Category Name</label>
+                <label for="inputText" class="col-sm-2 col-form-label">ProductName</label>
                 <div class="col-sm-10">
-                    {{ paform.product}}
+                    {{ vaform.product}}
                 </div>
               </div>
               
                
               <div class="row mb-3">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Slug</label>
+                <label for="inputPassword" class="col-sm-2 col-form-label">Variation Category</label>
                 <div class="col-sm-10">
-                    {{ paform.sizes}}
+                    {{ vaform.variation_category}}
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Description</label>
+                <label for="inputPassword" class="col-sm-2 col-form-label">Variation Value</label>
                 <div class="col-sm-10">
-                    {{ paform.colors }}
+                    {{ vaform.variation_value }}
 
                 </div>
               </div>
               <div class="row mb-3">
-                <label for="inputNumber" class="col-sm-2 col-form-label">Image</label>
+                <label for="inputNumber" class="col-sm-2 col-form-label">Is Active</label>
                 <div class="col-sm-10">
-                    {{ paform.quantinty}}
+                    {{ vaform.is_active}}
 
                 </div>
               </div>

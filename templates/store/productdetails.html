@@ -50,17 +50,15 @@
                         {{ single_product.description }}</p>
 
 
-                    <!-- <hr> -->
+                    <hr>
                     <div class="row">
                         <div class="item-option-select">
-                            <h6>{{ product_variant.size}}</h6>
+                            <h6>Choose Color</h6>
                             <select name="color" class="form-control" required>
                                 <option value="" disabled selected>Select</option>
-                                <option value="small">red</option>
-                                <option value="small">blue</option>
-                               <!-- {% for s in size%} -->
-                               
-                               <!-- {% endfor%} -->
+                                {% for i in single_product.variation_set.colors %}
+                                <option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -69,18 +67,19 @@
                             <h6>Select Size</h6>
                             <select name="size" class="form-control">
                                 <option value="" disabled selected>Select</option>
+                                {% for i in single_product.variation_set.sizes %}
+										<option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
+										{% endfor %}
                                 <!-- {% for i in product_variant.sizes %}
                                 <option value="{{ i.sizes | lower }}">{{ i.sizes | capfirst }}</option>
                                 {% endfor %} -->
-                                <option value="small">small</option>
-                                <option value="medium">medium</option>
-                                <option value="large">large</option>
+                            
                             </select>
                         </div>
                     </div>
                     <hr>
                    
-                    {{ sizes.size}}
+                   
                     <!-- {% for rs in sizes %}
                     <input type="radio"  {% if variant.id == rs.id %} checked {% endif %} name="variantid" id="variantid" value="{{ rs.id }}" onchange="this.form.submit();">
                     <li  {% if variant.id == rs.id %} class="active" {% endif %}>

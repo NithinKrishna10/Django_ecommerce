@@ -93,4 +93,4 @@ def signout(request):
     # request.session.flush()
   
     messages.success(request, "Logged Out Successfully!!")
-    return redirect('/')
+    return redirect('home')

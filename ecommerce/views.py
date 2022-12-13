@@ -21,6 +21,5 @@ def home(request):
         'products': products,
         'cate' : cate,
     }
-    return render(request, 'base.html', context)
-
+    return render(request, 'indexhome.html', context)
 

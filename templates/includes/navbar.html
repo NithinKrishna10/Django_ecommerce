@@ -23,9 +23,9 @@
     <ul class="navbar-nav">
     <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
     <li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li>
-  </ul> <!-- list-inline //  -->
-  </div> <!-- navbar-collapse .// -->
-</div> <!-- container //  -->
+  </ul> 
+  </div> 
+</div> 
 </nav>
 
 <section class="header-main border-bottom">
@@ -34,7 +34,7 @@
   <div class="col-lg-2 col-md-3 col-6">
     <a href="{% url 'home' %}" class="brand-wrap">
       <img class="logo" src="{% static './images/logo.png' %}">
-    </a> <!-- brand-wrap.// -->
+    </a>
   </div>
   <div class="col-lg col-sm col-md col-6 flex-grow-0">
     <div class="category-wrap dropdown d-inline-block float-right">
@@ -47,8 +47,8 @@
           <a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }} </a>
         {% endfor %}
       </div>
-    </div>  <!-- category-wrap.// -->
-  </div> <!-- col.// -->
+    </div>  
+  </div> 
   <a href="" class="btn btn-outline-primary">Store</a>
   <div class="col-lg  col-md-6 col-sm-12 col">
     <form action="" class="search" method='GET'>
@@ -61,8 +61,8 @@
             </button>
           </div>
         </div>
-    </form> <!-- search-wrap .end// -->
-  </div> <!-- col.// -->
+    </form> 
+  </div> 
   <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
         <div class="d-flex justify-content-end mb-3 mb-lg-0">
         {% if request.user.is_authenticated %}
@@ -80,7 +80,7 @@
             <small class="title text-muted">Welcome {{user.first_name}}!</small>
             <div>
               <a href="{% url 'dashboard' %}">Dashboard</a> <span class="dark-transp"> | </span>
-              <a href="{% url 'login' %}">Sign in</a> <span class="dark-transp"> | </span>
+              <a href="{% url 'login_user' %}">Sign in</a> <span class="dark-transp"> | </span>
               <a href="{% url 'signout' %}"> Logout</a>
             </div>
           </div>
@@ -89,13 +89,13 @@
             <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
             <span class="badge badge-pill badge-danger notify">{{cart_count}}</span>
           </a>
-        </div> <!-- widgets-wrap.// -->
-      </div> <!-- col.// -->
-</div> <!-- row.// -->
-  </div> <!-- container.// -->
-</section> <!-- header-main .// -->
+        </div> 
+      </div> 
+</div> 
+  </div> 
+</section>
 
 
 
 
-</header> <!-- section-header.// -->
+</header> 

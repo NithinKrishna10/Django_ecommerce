@@ -5,8 +5,8 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 
 from  accounts.models import Account
-from .forms import CategoryForm, ProductForm,UserForm,AttributeForm
-from store.models import Product,Category,ProductAttribute
+from .forms import CategoryForm, ProductForm,UserForm,VariationsForm
+from store.models import Product,Category,Variation
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -171,39 +171,54 @@ def edit_product(request, pk):
      }
     return render(request, 'customadmin/editproduct.html',context)
 
-def product_attribute(request):
+def variations(request):
     
-    product_at = ProductAttribute.objects.all()
-    productv = Product.objects.all()
+    productv = Variation.objects.all()
     
     context = {
-        'product_at': product_at,
+        
         'productv' : productv,
      }
 
     return render(request, 'customadmin/productvariant.html',context)
 
-def addproduct_attribute(request):
-    
-    if request.method == 'POST':
-      
-        paform = AttributeForm(request.POST)
-        # pform.is_valid()
-        print(paform.errors)
-        
-        if paform.is_valid():
+def addVariations(request):
+
+
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            vaform = VariationsForm(request.POST)
             
-            paform.save()
-            
-            return redirect('product_attribute')
-        else:
-            print('ytuiowetkii')
-            
-    paform = AttributeForm()
-    context ={
-                'paform' : paform
+            print(vaform.errors)
+            if vaform.is_valid():
+                vaform.save()
+            return redirect( 'category')
+        vaform = VariationsForm()
+        context ={
+            'vaform' : vaform 
         }
-    return render(request, 'customadmin/addvariant.html',context)
+        return render(request, 'customadmin/addvariant.html',context)
+    else:
+        return redirect('variations')
+  
+    # if request.method == 'POST':
+      
+    #     # pform.is_valid()
+    #     print(paform.errors)
+        
+    #     if paform.is_valid():
+            
+    #         paform.save()
+            
+    #         return redirect('product_attribute')
+    #     else:
+    #         print('ytuiowetkii')
+            
+    # paform =
+    # context ={
+    #             'paform' : paform
+    #     }
+    # return render(request, 'customadmin/addvariant.html',context)
         
 
 
@@ -219,6 +234,7 @@ def add_category(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             cform = CategoryForm(request.POST, request.FILES)
+            
             print(cform.errors)
             if cform.is_valid():
                 cform.save()

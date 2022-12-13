@@ -52,9 +52,9 @@
               <td><form action="{% url 'block_user' cr.id %}" method="POST"> 
                 {% csrf_token %}
                 {% if cr.is_active == True  %}
-                <button type="submit" class="btn btn-outline-danger">Block</button>
+                <button type="submit" onclick="showConfirm()" class="btn btn-outline-danger">Block</button>
                 {% else %}
-                <button type="submit" class="btn btn-outline-warning">Unblock</button>
+                <button type="submit" onclick="showConfirm()" class="btn btn-outline-warning">Unblock</button>
                 {% endif %}
               </form></td>
             </tr>
@@ -68,4 +68,17 @@
     </div>
   </div>
   </section>
+
+
+  <script>
+    function showConfirm() {
+      var confirmed = confirm("Are you sure you want to Block this User?");
+  
+      if (confirmed) {
+          // Perform the action if the user clicks "OK"
+      } else {
+          // Cancel the action if the user clicks "Cancel"
+      }
+  }
+  </script>
   {% endblock  %}

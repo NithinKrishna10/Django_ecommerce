@@ -1,6 +1,6 @@
 
 from django import forms
-from store.models import Product,Category,Brand,ProductAttribute
+from store.models import Product,Category,Brand,Variation
 from django.contrib.auth.models import User
 
 class ProductForm(forms.ModelForm):
@@ -26,7 +26,7 @@ class UserForm(forms.ModelForm):
         model = User
         fields = '__all__'
         
-class AttributeForm(forms.ModelForm):
+class VariationsForm(forms.ModelForm):
     class Meta:
-        model = ProductAttribute
+        model = Variation
         fields = '__all__'
