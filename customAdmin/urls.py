@@ -15,6 +15,9 @@ urlpatterns = [
     path('edit_product/<str:pk>/', views.edit_product, name='edit_product'),
     path('variations',views.variations,name='variations'),
     path('addVariations',views.addVariations,name='addVariations'),
+    path('deleteVariant/<str:pk>/',views.deleteVariant,name='deleteVariant'),
+    path('blockVariant/<str:pk>/',views.blockVariant,name='blockVariant'),
+
     # =================================== category ===================================
 
     path('category',views.category,name='category'),

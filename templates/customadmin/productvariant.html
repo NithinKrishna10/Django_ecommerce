@@ -33,7 +33,7 @@
               <th scope="col">Variant Category</th>
               <th scope="col">Value</th>
               <th scope="col">Is Active</th>
-              <!-- <th scope="col">Created Date</th> -->
+              <th scope="col">Created Date</th>
               <!-- <th scope="col">{{products}}</th> -->
             </tr>
           </thead>
@@ -44,7 +44,22 @@
               <td>{{ prv.product}}</td>
               <td>{{ prv.variation_category }}</td>
               <td>{{ prv.variation_value }}</td>
-              <td>{{ prv.is_active }}</td>
+              <!-- <td>{{ prv.is_active }}</td> -->
+          
+              <td>
+                <form action="{% url 'blockVariant' prv.id %}" method="POST"> 
+                {% csrf_token %}
+                {% if prv.is_active == True  %}
+                <button type="submit" onclick="showConfirm()" class="btn btn-outline-danger">Block</button>
+                {% else %}
+                <button type="submit" onclick="showConfirm()" class="btn btn-outline-warning">Unblock</button>
+                {% endif %}
+              </form>
+            </td>
+            <td><form action="{% url 'deleteVariant' prv.id %}" method="POST"> 
+              {% csrf_token %}
+              <button type="submit" onclick="showConfirm()" class="btn btn-outline-danger">Delete</button>
+            </form></td>
               
             </tr>
             {% endfor %}
@@ -58,4 +73,16 @@
   </div>
   </section>
 
+
+  <script>
+    function showConfirm() {
+      var confirmed = confirm("Are you sure you want to Block this User?");
+  
+      if (confirmed) {
+          // Perform the action if the user clicks "OK"
+      } else {
+          // Cancel the action if the user clicks "Cancel"
+      }
+  }
+  </script>
 {% endblock %}

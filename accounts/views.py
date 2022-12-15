@@ -2,9 +2,13 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
+from orders.models import OrderProduct
+
+from orders.models import Order
 from .models import Account, UserProfile
 
 # from accounts.forms import UserAdminCreationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -12,13 +16,6 @@ from .forms import RegistrationForm, UserForm, UserProfileForm
 from django.contrib.sites.shortcuts import get_current_site
 
 
-# Verification email
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import EmailMessage
 
 
 
@@ -43,19 +40,19 @@ def register(request):
             profile.save()
 
             # USER ACTIVATION
-            current_site = get_current_site(request)
-            mail_subject = 'Please activate your account'
-            message = render_to_string('accounts/account_verification_email.html', {
-                'user': user,
-                'domain': current_site,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': default_token_generator.make_token(user),
-            })
-            to_email = email
-            send_email = EmailMessage(mail_subject, message, to=[to_email])
-            send_email.send()
+            # current_site = get_current_site(request)
+            # mail_subject = 'Please activate your account'
+            # message = render_to_string('accounts/account_verification_email.html', {
+            #     'user': user,
+            #     'domain': current_site,
+            #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            #     'token': default_token_generator.make_token(user),
+            # })
+            # to_email = email
+            # send_email = EmailMessage(mail_subject, message, to=[to_email])
+            # send_email.send()
             # messages.success(request, 'Thank you for registering with us. We have sent you a verification email to your email address [rathan.kumar@gmail.com]. Please verify it.')
-            return redirect('login_user                                    ')
+            return redirect('login_user')
     else:
         form = RegistrationForm()
     context = {
@@ -94,3 +91,41 @@ def signout(request):
   
     messages.success(request, "Logged Out Successfully!!")
     return redirect('home')
+
+
+@login_required(login_url = 'login')
+def dashboarduser(request):
+    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id)
+    orders_count = orders.count()
+    print(orders_count)
+    userprofile = UserProfile.objects.get(user_id=request.user.id)
+    context = {
+        'orders_count': orders_count,
+        'userprofile': userprofile,
+    }
+    return render(request, 'accounts/dashboard.html', context)
+
+
+
+@login_required(login_url='login')
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'accounts/my_orders.html', context)
+
+@login_required(login_url='login')
+def order_detail(request, order_id):
+    order_detail = OrderProduct.objects.filter(order__order_number=order_id)
+    order = Order.objects.get(order_number=order_id)
+    subtotal = 0
+    for i in order_detail:
+        subtotal += i.product_price * i.quantity
+
+    context = {
+        'order_detail': order_detail,
+        'order': order,
+        'subtotal': subtotal,
+    }
+    return render(request, 'accounts/order_detail.html', context)

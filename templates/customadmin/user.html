@@ -49,14 +49,16 @@
                 {% endif %}
               </td>
               
-              <td><form action="{% url 'block_user' cr.id %}" method="POST"> 
+              <td>
+                <form action="{% url 'block_user' cr.id %}" method="POST"> 
                 {% csrf_token %}
                 {% if cr.is_active == True  %}
                 <button type="submit" onclick="showConfirm()" class="btn btn-outline-danger">Block</button>
                 {% else %}
                 <button type="submit" onclick="showConfirm()" class="btn btn-outline-warning">Unblock</button>
                 {% endif %}
-              </form></td>
+              </form>
+            </td>
             </tr>
             {% endfor %}
           

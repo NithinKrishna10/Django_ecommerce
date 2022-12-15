@@ -49,7 +49,7 @@ def admin_login(request):
 def dashboard(request):
     if request.user.is_authenticated:
         
-        return render(request,'customadmin/index.html' )
+        return render(request,'customadmin/dashboard.html' )
     
     else:
         return redirect('admin_login')
@@ -80,20 +80,6 @@ def edit_user(request, pk):
      }
     return render(request, 'customadmin/useredit.html',context)
 
-# def edit_user(request, pk):
-#     user = Account.objects.get(id=pk)
-#     uform = UserForm(instance=user)
-    
-#     if request.method == 'POST':
-#         uform = UserForm(request.POST ,instance=user)
-#         if uform.is_valid():
-#             uform.save()
-#         return redirect('user_management')
-    
-#     context ={
-#         'uform' : uform
-#      }
-#     return render(request, 'customadmin/useredit.html',context)
 
 def block_user(request,pk):
     user = Account.objects.get(id=pk) 
@@ -127,7 +113,7 @@ def product(request):
 def add_products(request):
     print('hoii')
     if request.method == 'POST':
-        print('hvfi')
+        
         pform = ProductForm(request.POST, request.FILES)
         # pname= "Pieces Metalic Printed"
         # # pform.is_valid()
@@ -140,9 +126,9 @@ def add_products(request):
             
 
         if pform.is_valid():
-            print('hoiytyrtyryrtyti')
+           
             pform.save()
-            print('hoifggi')
+          
             return redirect('product_manage')
         else:
             print('ytuiowetkii')
@@ -200,26 +186,29 @@ def addVariations(request):
         return render(request, 'customadmin/addvariant.html',context)
     else:
         return redirect('variations')
-  
-    # if request.method == 'POST':
-      
-    #     # pform.is_valid()
-    #     print(paform.errors)
-        
-    #     if paform.is_valid():
+
+
+def blockVariant(request, pk):
+    variant = Variation.objects.get(id=pk) 
+    if request.method == 'POST':
+   
+        if variant.is_active == True:
             
-    #         paform.save()
-            
-    #         return redirect('product_attribute')
-    #     else:
-    #         print('ytuiowetkii')
-            
-    # paform =
-    # context ={
-    #             'paform' : paform
-    #     }
-    # return render(request, 'customadmin/addvariant.html',context)
-        
+            variant.is_active = False
+            variant.save()
+        else:
+            variant.is_active = True
+            variant.save()
+
+        return redirect('variations')
+    
+def deleteVariant(request, pk):
+    
+    variants = Variation.objects.get(id=pk)
+    if request.method == 'POST':
+        variants.delete()
+
+        return redirect('variations')
 
 
 # ========================================== Admin Category Functions ========================================== #
