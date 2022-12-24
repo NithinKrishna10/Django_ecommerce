@@ -59,6 +59,7 @@
                 {% endif %}
               </form>
             </td>
+            <td> <button type="button" class="btn btn-info"><a style="text-decoration: none; color: white;" href="{% url 'edit_user' cr.id %}">Edit User</a></button></td>
             </tr>
             {% endfor %}
           
@@ -83,4 +84,5 @@
       }
   }
   </script>
+  
   {% endblock  %}

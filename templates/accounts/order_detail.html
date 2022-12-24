@@ -4,7 +4,8 @@
 {% block content %}
 
 
-<div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 100px;margin-bottom: 50px;">
+
+<div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
     <div class="row invoice row-printable">
         <div class="col-md-12">
             <!-- col-lg-12 start here -->
@@ -15,7 +16,7 @@
                         <!-- Start .row -->
                         <div class="col-lg-6">
                             <!-- col-lg-6 start here -->
-                            <div class="invoice-logo"><h1 style="max-height: 40px;">BLAZE</h1></div>
+                            <div class="invoice-logo"><img src="{% static '/images/logo.png' %}" alt="Invoice logo" style="max-height: 40px;"></div>
                         </div>
                         <!-- col-lg-6 end here -->
                         <div class="col-lg-6">
@@ -49,14 +50,17 @@
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
+                                                <th>image</th>
                                                 <th class="per70 text-center">Products</th>
                                                 <th class="per5 text-center">Qty</th>
                                                 <th class="per25 text-center">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <!-- <td>{{order_detail.product}}</td> -->
                                           {% for item in order_detail %}
                                             <tr>
+                                                <td scope="row"><div style="width: 5rem;"><img class="img-fluid" src="{{ item.product.images.url }}" alt=""></div></td>
                                                 <td>{{item.product.product_name}}
                                                   <p class="text-muted small">
                                           					{% if item.variations.all %}
@@ -67,23 +71,28 @@
                                           				</p>
                                                 </td>
                                                 <td class="text-center">{{item.quantity}}</td>
-                                                <td class="text-center">${{item.product_price}} USD</td>
+                                                <td class="text-center">${{item.product_price}} RS</td>
                                             </tr>
                                           {% endfor %}
                                         </tbody>
                                         <tfoot>
                                             <tr>
+                                                <th></th>
                                                 <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">${{subtotal}} USD</th>
+                                                <th class="text-center">${{subtotal}} RS</th>
                                             </tr>
                                             <tr>
+                                                <th></th>
+
                                                 <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">${{order.tax}} USD</th>
+                                                <th class="text-center">${{order.tax}} RS</th>
                                             </tr>
 
                                             <tr>
+                                                <th></th>
+
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">${{order.order_total}} USD</th>
+                                                <th class="text-center">${{order.order_total}} RS</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -103,6 +112,7 @@
         <!-- col-lg-12 end here -->
     </div>
     </div>
+
 
 
 {% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'indexhome.html' %}
+{% load static %}
+
+{% block content %}
+<section style="height: 50%;">
+<div class="container" style="margin-top: 6rem; text-align: center;">
+    <div>
+    <H1>Thank You For Ordering</H1>
+    <h1>Your order placed successfully</h1>
+    </div>
+    <div style="display: flex;">
+        <button type="submit"  class="btn btn-outline-warning " style="margin: auto;"><a href="{% url 'store_view'%}">Continue Shopping</a></button>
+        <button type="submit"  class="btn btn-outline-warning " style="margin: auto;"><a href="{% url 'my_orders'%}">See Orders</a></button>
+    </div>
+</div>
+</section>
+{% endblock %}

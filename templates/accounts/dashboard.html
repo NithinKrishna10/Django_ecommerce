@@ -43,6 +43,22 @@
 		</article> <!-- order-group.// -->
 	</main>
 </div> <!-- row.// -->
+
+<div class="row">
+	{% for address in addresses %}
+	<div>
+		<input type="radio" name="shipping_address" value="{{ address.id }}">
+		{{ address.name }}<br>
+		{{ address.address1 }}<br>
+		{% if address.address2 %}
+			{{ address.address2 }}<br>
+		{% endif %}
+		{{ address.city }}, {{ address.state }} {{ address.zipcode }}<br>
+		{{ address.country }}
+	</div>
+	<hr>
+{% endfor %}
+</div>
 </div>
 
 

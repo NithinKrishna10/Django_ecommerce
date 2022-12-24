@@ -52,8 +52,8 @@ class Account(AbstractBaseUser):
     last_login      = models.DateTimeField(auto_now_add=True)
     is_admin        = models.BooleanField(default=False)
     is_staff        = models.BooleanField(default=False)
-    is_active        = models.BooleanField(default=False)
-    is_superadmin        = models.BooleanField(default=False)
+    is_active        = models.BooleanField(default=True)
+    is_superadmin    = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
@@ -81,9 +81,22 @@ class UserProfile(models.Model):
     city = models.CharField(blank=True, max_length=20)
     state = models.CharField(blank=True, max_length=20)
     country = models.CharField(blank=True, max_length=20)
-
+    pincode=models.IntegerField(default=1)
     def __str__(self):
         return self.user.first_name
 
     def full_address(self):
         return f'{self.address_line_1} {self.address_line_2}'
+
+
+class Address(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    address1 = models.CharField(max_length=255)
+    address2 = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=255)
+    phone = models.CharField(max_length=15,default=0)
+    state = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
+    pincode = models.CharField(max_length=255)
+    phone = models.CharField(max_length=15,default=0)

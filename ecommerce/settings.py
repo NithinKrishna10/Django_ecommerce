@@ -13,8 +13,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -141,3 +145,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 MEDIA_URL = '/media/'
 
+# ACCOUNT_SID = "SK89ceeec6846fa2465b0fd994cf12dc95"
+# AUTH_TOKEN = "e08a6c38c2e9815753a5c3b8fd142442"
+
+# "SKfcf704c760371d49480cd697d8926580"
+
+
+# "NMGUjDIhCIurYSuga4r2zemJvF8WCz8C"
+
+
+# auth_token = os.environ[""]
+# verify_sid = os.environ[""]
+
+ACCOUNT_SID='SK89ceeec6846fa2465b0fd994cf12dc95'
+AUTH_TOKEN='e08a6c38c2e9815753a5c3b8fd142442'
+COUNTRY_CODE='+91'
+TWILIO_WHATSAPP_NUMBER='whatsapp:+14155238886'
+TWILIO_PHONE_NUMBER='+186059626740'

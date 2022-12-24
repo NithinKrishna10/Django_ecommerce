@@ -1,0 +1,196 @@
+{% extends 'customadmin/adminbase.html' %}
+{% load static %}
+
+  
+{% block content %}
+
+
+
+<section class="section container" style="margin-top: 5rem;">
+    <div class="row ">
+      <div class="" style="width: 70%; margin-left: 20%;">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Add Category Form </h5>
+
+            <!-- General Form Elements -->
+            <form action="" enctype='multipart/form-data' id="brand-form"  method="POST">
+                {% csrf_token %}
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label">Brand Name</label>
+                <div class="col-sm-10">
+                    {{ bform.brand_name }}
+                </div>
+              </div>
+              
+
+              <div class="row mb-3">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                    {{ bform.brand_description }}
+
+                </div>
+              </div>
+
+               
+              <div class="row mb-3" id="alert-box" >
+                <label for="inputPassword" id="image-box" class="col-sm-2 col-form-label">Image</label>
+                <div class="col-sm-10">
+                    {{ bform.brand_image}}
+                </div>
+              </div>
+              
+        
+           
+              <div class="form-group">
+                <div id="image-box" class="image-container"></div>
+                <button class="btn btn-outline-info" id="crop-btn" style=" margin-top: 10px; display: none;" type="button">Crop</button>
+                <button class="btn btn-outline-info" id="confirm-btn" style=" margin-top: 10px;" type="submit" fdprocessedid="7q62v8">Post</button>
+    
+            </div>
+              <div class="row mb-3" style="margin-top: 3rem;">
+                <label class="col-sm-2 col-form-label">Submit Button</label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary"    id="confirm-btnn">Submit Form</button>
+                </div>
+              </div>
+
+            </form><!-- End General Form Elements -->
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+<!-- 
+  <script>
+        
+    const imagebox = document.getElementById('image-box')
+    const crop_btn = document.getElementById('crop-btn')
+    const input = document.getElementById('id_brand_image')
+        input.addEventListener('change', ()=>{
+      const img_data = input.files[0]
+      const url = URL.createObjectURL(img_data)
+      
+      imagebox.innerHTML = `<img src="${url}" id="image" style="width:100%;">`
+
+      const image = document.getElementById('id_brand_image')
+
+      document.getElementById('image-box').style.display = 'block'
+      document.getElementById('crop-btn').style.display = 'block'
+      // Hiding the Post button
+      document.getElementById('confirm-btn').style.display = 'none'
+
+      // Creating a croper object with the cropping view image
+      // The new Cropper() method will do all the magic and diplay the cropping view and adding cropping functionality on the website
+      // For more settings, check out their official documentation at https://github.com/fengyuanchen/cropperjs
+      const cropper = new Cropper(image, {
+      autoCropArea: 1,
+      viewMode: 1,
+      scalable: false,
+      zoomable: false,
+      movable: false,
+      minCropBoxWidth: 200,
+      minCropBoxHeight: 200,
+      })
+
+      // When crop button is clicked this event will get triggered
+      crop_btn.addEventListener('click', ()=>{
+        // This method coverts the selected cropped image on the cropper canvas into a blob object
+        cropper.getCroppedCanvas().toBlob((blob)=>{
+          
+          // Gets the original image data
+          let fileInputElement = document.getElementById('image');
+          // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
+          let file = new File([blob], img_data.name,{type:"image/*", lastModified:new Date().getTime()});
+          // Create a new container
+          let container = new DataTransfer();
+          // Add the cropped image file to the container
+          container.items.add('id_brand_image');
+          // Replace the original image file with the new cropped image file
+          fileInputElement.files = container.files;
+
+          // Hide the cropper box
+          document.getElementById('image-box').style.display = 'none'
+          // Hide the crop button
+          document.getElementById('crop-btn').style.display = 'none'
+          // Display the Post button
+          document.getElementById('confirm-btn').style.display = 'block'
+
+          });
+        });
+    });	
+</script> -->
+<!-- <script>
+  const alertBox = document.getElementById('alert-box')
+  const imageBox = document.getElementById('image-box')
+  const imageForm = document.getElementById('brand-form')
+  const confirmBtn = document.getElementById('confirm-btn')
+  const input = document.getElementById('id_brand')
+  
+  const csrf = document.getElementsByName('csrfmiddlewaretoken')
+   
+  input.addEventListener('change', ()=>{
+      alertBox.innerHTML = ""
+      confirmBtn.classList.remove('not-visible')
+      const img_data = input.files[0]
+      const url = URL.createObjectURL(img_data)
+   
+      imageBox.innerHTML = `<img src="${url}" id="image" width="700px">`
+      var $image = $('#image')
+      console.log($image)
+   
+      $image.cropper({
+          aspectRatio: 16 / 9,
+          crop: function(event) {
+              console.log(event.detail.x);
+              console.log(event.detail.y);
+              console.log(event.detail.width);
+              console.log(event.detail.height);
+              console.log(event.detail.rotate);
+              console.log(event.detail.scaleX);
+              console.log(event.detail.scaleY);
+          }
+      });
+       
+      var cropper = $image.data('cropper');
+      confirmBtn.addEventListener('click', ()=>{
+          cropper.getCroppedCanvas().toBlob((blob) => {
+              console.log('confirmed')
+              const fd = new BrandForm();
+              fd.append('csrfmiddlewaretoken', csrf[0].value)
+              fd.append('file', blob, 'my-image.png');
+   
+              $.ajax({
+                  type:'POST',
+                  url: imageForm.action,
+                  enctype: 'multipart/form-data',
+                  data: fd,
+                  success: function(response){
+                      console.log('success', response)
+                      alertBox.innerHTML = `<div class="alert alert-success" role="alert">
+                                              Successfully saved and cropped the selected image
+                                          </div>`
+                  },
+                  error: function(error){
+                      console.log('error', error)
+                      alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
+                                              Ups...something went wrong
+                                          </div>`
+                  },
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+              })
+          })
+      })
+  })
+</script> -->
+
+
+
+
+{% endblock %}

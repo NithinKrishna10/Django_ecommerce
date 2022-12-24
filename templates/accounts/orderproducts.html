@@ -1,0 +1,87 @@
+{% extends 'indexhome.html' %}
+
+
+{% block content %}
+
+<section class="section-conten padding-y bg" style="margin-top: 5%;">
+
+{% include 'includes/alerts.html' %}
+<div class="container">
+	<div class="row">
+	{% include 'includes/dashboard_sidebar.html' %}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Your order history</strong>
+
+		</header>
+		<div class="card-body">
+			<div class="row">
+			<div class="col-md-12">
+				<table class="table table-hover">
+				  <thead>
+				    <tr>
+                      <th scope="col">Images</th>
+				      <th scope="col">Order </th>
+                      <th scope="col">Date</th>
+				      <th scope="col">Order No</th>
+				      <th scope="col">Product</th>
+				      <th scope="col">Price</th>
+					  
+					  <th scope="col">Quantity</th>
+					  <th scope="col">Variation</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+						{% for order in orderitems %}
+				    <tr>
+                     <th scope="row"><div style="width: 3rem;"><img class="img-fluid" src="{{order.product.images.url}}" alt=""></div></th>
+
+				      <th scope="row"><a href="{% url 'order_detail' order.id %}">{{order.order}}</a></th>
+				      <td>{{order.order_number}}</td>
+                      <td>{{ order.created_at }}</td>
+				      <td>{{order.product}}</td>
+				      <td>${{order.product_price}}</td>
+					   <td>{{order.quantity}}</td>
+					   <!-- <td>{}</td> -->
+					   <td>
+						<p class="text-muted small">
+                            {% if order.variations.all %}
+                                {% for i in order.variations.all %}
+                                    {{ i.variation_category | capfirst }} : {{ i.variation_value | capfirst }} <br>
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+					   </td>
+				    </tr>
+				{% endfor %}
+
+				  </tbody>
+				</table>
+			</div>
+
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+
+		</article> <!-- order-group.// -->
+	</main>
+</div> <!-- row.// -->
+</div>
+<!-- {% for ord in orders%}
+ <h1>{{ord.order_number}} </h1>
+{% endfor %} -->
+</section>
+
+<script>
+    function showConfirm() {
+      var confirmed = confirm("Are you sure you want to Block this User?");
+  
+      if (confirmed) {
+          // Perform the action if the user clicks "OK"
+      } else {
+          // Cancel the action if the user clicks "Cancel"
+      }
+  }
+  </script>
+
+{% endblock %}

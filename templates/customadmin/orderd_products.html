@@ -1,0 +1,86 @@
+{% extends 'customadmin/adminbase.html' %}
+{% load static %}
+
+  
+{% block content %}
+<section style="margin-top: 5rem;"></section>
+
+<div class="col-12">
+    <div class="card recent-sales overflow-auto">
+
+      <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+          <li class="dropdown-header text-start">
+            <h6>Filter</h6>
+          </li>
+
+          <li><a class="dropdown-item" href="#">Today</a></li>
+          <li><a class="dropdown-item" href="#">This Month</a></li>
+          <li><a class="dropdown-item" href="#">This Year</a></li>
+        </ul>
+      </div>
+
+      <div class="card-body">
+       
+        <table class="table table-borderless datatable">
+          <thead>
+            <tr>
+              <th scope="col">Images</th>
+              <th scope="col">Product</th>
+              <th scope="col">Order</th>
+              
+              <th scope="col">Order NO</th>
+              <th scope="col">Date</th>
+              <th scope="col">Price</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Variant</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orderitems %}
+            <tr>
+              <td ><div style="width: 3rem;"><img class="img-fluid" src="{{order.product.images.url}}" alt=""></div></td>
+              <td>{{ order.product }}</td>
+              <td>{{order.order}}</a></td>
+              <td>{{ order.order_number}}</td>
+              <td>{{ order.created_at}}</td>
+              <td>{{ order.product_price}}</td>
+              <td>{{ order.quantity}}</td>
+              <td>
+                    <p class="text-muted small">
+                    {% if order.variations.all %}
+                        {% for i in order.variations.all %}
+                            {{ i.variation_category | capfirst }} : {{ i.variation_value | capfirst }} <br>
+                        {% endfor %}
+                    {% endif %}
+                </p>
+              </td>
+           
+              
+          
+            </tr>
+            {% endfor %}
+          
+          </tbody>
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+  </section>
+
+
+  <script>
+    function showConfirm() {
+      var confirmed = confirm("Are you sure you want to Block this User?");
+  
+      if (confirmed) {
+          // Perform the action if the user clicks "OK"
+      } else {
+          // Cancel the action if the user clicks "Cancel"
+      }
+  }
+  </script>
+  {% endblock  %}

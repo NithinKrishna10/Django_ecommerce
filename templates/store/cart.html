@@ -12,6 +12,7 @@
 <section class="bg0 p-t-75 p-b-85">
     <div class="container">
         <div class="row">
+            {% include 'includes/alerts.html' %}
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
                 <div class="m-l-6 m-r--38 m-lr-0-xl">
                     <div class="wrap-table-shopping-cart">
@@ -47,7 +48,7 @@
                                 </td>
                             
                                 <td class="column-3">
-  
+                                    
                                         <div class="input-group input-spinner">
                                             <div class="input-group-prepend">
                                             <a href="{% url 'remove_cart' cart_item.product.id cart_item.id %}" class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </a>
@@ -65,7 +66,7 @@
                                         </div> 
                                   
                                 </td>
-                                <td class="column-4">${{ cart_item.product.price }}</td>
+                                <td class="column-4">₹{{ cart_item.product.price }}</td>
                                 <!-- <td class="column-5"></td> -->
 
                                 
@@ -188,6 +189,42 @@
                             <!-- <p class="text-center mb-3">
                                 <img src="{% static 'firstm/images/misc/payments.png' %}" height="26">
                             </p> -->
+                            <div>
+
+                                <!-- <form method="post">
+                                    {% csrf_token %}
+                                    <hr>
+                                    {% for address in addresses %}
+                                        <div>
+                                            <input type="radio" name="shipping_address" value="{{ address.id }}">
+                                            {{ address.name }}<br>
+                                            {{ address.address1 }}<br>
+                                            {% if address.address2 %}
+                                                {{ address.address2 }}<br>
+                                            {% endif %}
+                                            {{ address.city }}, {{ address.state }} {{ address.zipcode }}<br>
+                                            {{ address.country }}
+                                        </div>
+                                        <hr>
+                                    {% endfor %}
+                                    <h5>Dont have accounts a</h5>
+                                    <button type="submit">Place Order</button>
+                                </form> -->
+                                <!-- <h4>Select Address</h4>
+                                {% for us in userpro %}
+                                <div>
+                               
+                                <h5>{{us.user.first_name}}</h5>
+                                <p>
+                                    {{us.address_line_1}},
+                                    {{us.city}},
+                                    {{us.state}},
+                                    {{us.pincode}},
+                                   
+                                </p>
+                                </div>
+                            {% endfor %} -->
+                            </div>
                             <a href="{% url 'checkout' %}" class="btn btn-primary btn-block"> Checkout </a>
                             <a href="{% url 'store_view' %}" class="btn btn-light btn-block">Continue Shopping</a>
                         </div> <!-- card-body.// -->

@@ -10,6 +10,8 @@
   <meta content="" name="description">
   <meta content="" name="keywords">
 
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
   <!-- Favicons -->
   <link href="{% static 'customadmin/img/favicon.png' %}" rel="icon">
   <link href="{% static 'customadmin/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
@@ -44,9 +46,9 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="" class="logo d-flex align-items-center">
         <img src="{% static 'customadmin/img/logo.png' %}" alt="">
-        <span class="d-none d-lg-block">NiceAdmin</span>
+        <span class="d-none d-lg-block">NITHIN Admin</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -147,8 +149,29 @@
          
         </ul>
       </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'brands' %}">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>Brand</span>
+        </a>
+      </li>
       <!-- ========================================================================================== -->
 
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'orders' %}">
+          <i class="bi bi-person"></i>
+          <span>Order Managment</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
+
+      
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'productsorderd' %}">
+          <i class="bi bi-person"></i>
+          <span>Ordered Products</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
 
     
       <li class="nav-item">
@@ -223,6 +246,12 @@
         <!-- </div> -->
       </footer><!-- End Footer -->
     
+
+      <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+ 
+      <!-- cropper -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
+     
      
       <!-- Vendor JS Files -->
       <script src="{% static 'customadmin/vendor/apexcharts/apexcharts.min.js' %}"></script>
@@ -236,7 +265,85 @@
     
       <!-- Template Main JS File -->
       <script src="{% static 'customadmin/js/main.js' %}"></script>
+    <!-- =============================== -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+ 
+    <!-- cropper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
+    <!-- ============================================= -->
+    <script>
+      const alertBox = document.getElementById('alert-box')
+      const imageBox = document.getElementById('image-box')
+      const imageForm = document.getElementById('brand-form')
+      const confirmBtn = document.getElementById('confirm-btn')
+      const input = document.getElementById('id_brand_image')
+      const desc = document.getElementById('id_brand_description')
+      const bname = document.getElementById('id_brand_name')
+      
+      const csrf = document.getElementsByName('csrfmiddlewaretoken')
+       
+      input.addEventListener('change', ()=>{
+          alertBox.innerHTML = ""
+          confirmBtn.classList.remove('not-visible')
+          const img_data = input.files[0]
+          const url = URL.createObjectURL(img_data)
+       
+          imageBox.innerHTML = `<img src="${url}" id="image" width="700px">`
+          var $image = $('#brand_image')
+          console.log($image)
+       
+          $image.cropper({
+              aspectRatio: 16 / 9,
+              crop: function(event) {
+                  console.log(event.detail.x);
+                  console.log(event.detail.y);
+                  console.log(event.detail.width);
+                  console.log(event.detail.height);
+                  console.log(event.detail.rotate);
+                  console.log(event.detail.scaleX);
+                  console.log(event.detail.scaleY);
+              }
+          });
+           
+          var cropper = $image.data('cropper');
+          confirmBtn.addEventListener('click', ()=>{
+              cropper.getCroppedCanvas().toBlob((blob) => {
+                  console.log('confirmed')
+                  const fd = new BrandForm();
+                  fd.append('csrfmiddlewaretoken', csrf[0].value)
+                  fd.append('brand_image', blob, 'my-image.png',bname,desc);
+       
+                  $.ajax({
+                      type:'POST',
+                      url: imageForm.action,
+                      enctype: 'multipart/form-data',
+                      data: fd,
+                      success: function(response){
+                          console.log('success', response)
+                          alertBox.innerHTML = `<div class="alert alert-success" role="alert">
+                                                  Successfully saved and cropped the selected image
+                                              </div>`
+                      },
+                      error: function(error){
+                          console.log('error', error)
+                          alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
+                                                  Ups...something went wrong
+                                              </div>`
+                      },
+                      cache: false,
+                      contentType: false,
+                      processData: false,
+                  })
+              })
+          })
+      })
+      </script>
+ 
     
+  
+
+
     </body>
     
     </html>

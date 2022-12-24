@@ -17,16 +17,25 @@ urlpatterns = [
     path('addVariations',views.addVariations,name='addVariations'),
     path('deleteVariant/<str:pk>/',views.deleteVariant,name='deleteVariant'),
     path('blockVariant/<str:pk>/',views.blockVariant,name='blockVariant'),
-
+    
     # =================================== category ===================================
 
     path('category',views.category,name='category'),
     path('add_category',views.add_category,name='add_category'),
     path('edit_category/<str:pk>/', views.edit_category, name='edit_category'),
     path('del_category/<str:pk>/', views.del_category, name='del_category'),
+    path('brands',views.brands,name='brands'),
+    path('addbrand',views.addbrand,name='addbrand'),
     # =================================== user ===================================
 
     path('adminlogout/', views.adminlogout, name='adminlogout'),
     path('edit_user/<str:pk>/', views.edit_user, name='edit_user'),
     path('block_user/<str:pk>/', views.block_user, name='block_user'),
+
+    # =================================== Order ===================================
+
+    path('orders/', views.orders, name='orders'),
+    path('cancelorder/<int:order_id>/', views.cancelorder, name='cancelorder'),
+    path('orderdetail/<int:order_id>/', views.orderdetail, name='orderdetail'),
+    path('productsorderd/', views.productsorderd, name='productsorderd'),
 ]

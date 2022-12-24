@@ -7,7 +7,7 @@
 <!-- breadcrumb -->
 <div class="container " style="margin-top: 5%;">
     <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-        <a href="" class="stext-109 cl8 hov-cl1 trans-04">
+        <a href="{% url 'home' %}" class="stext-109 cl8 hov-cl1 trans-04">
             Home
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
@@ -16,7 +16,7 @@
             Men
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
-
+        
         <span class="stext-109 cl4">
             Lightweight Jacket
         </span>
@@ -72,8 +72,10 @@
           
             <div class="col-md-6 col-lg-5 p-b-30">
                 <div class="p-r-50 p-t-5 p-lr-0-lg">
-                    <form action="{% url 'add_cart' single_product.id %}" method="POST">
+                    <form action="{% url 'add_cart' single_product.id %}" method="POST" id="add-to-cart-form">
                         {% csrf_token %}
+                        
+                        <h1></h1>
                     <h4 class="mtext-105 cl2 js-name-detail p-b-14">
                         Brand: {{single_product.brand}}
                     </h4>
@@ -82,56 +84,27 @@
                     </h4>
 
                     <span class="mtext-106 cl2">
-                        ${{single_product.price}}
+                        ₹ {{single_product.price}}
                     </span>
 
                     <p class="stext-102 cl3 p-t-23">
+                        
                         {{ single_product.description }}
+
                     </p>
-                    
-                    <!--  -->
-                    <!-- <div class="p-t-33">
-                        <div class="flex-w flex-r-m p-b-10">
-                            <div class="size-203 flex-c-m respon6">
-                                Size
-                            </div>
+    
+                       {% if single_product.stock <= 0 %}
 
-                            <div class="size-204 respon6-next">
-                                <div class="rs1-select2 bor8 bg0">
-                                    <select class="js-select2" name="time">
-                                        {% for i in single_product.variation_set.sizes %}
-										<option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
-										{% endfor %}
-                                    </select>
-                                    <div class="dropDownSelect2"></div>
-                                </div>
-                            </div>
-                        </div>
+                        <h5 class="text-danger flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">Out of Stock</h5>
 
-                        <div class="flex-w flex-r-m p-b-10">
-                            <div class="size-203 flex-c-m respon6">
-                                Color
-                            </div>
 
-                            <div class="size-204 respon6-next">
-                                <div class="rs1-select2 bor8 bg0">
-                                    <select class="js-select2" name="time">
-                                     
-                                        {% for i in single_product.variation_set.colors %}
-                                        <option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <div class="dropDownSelect2"></div>
-                                </div>
-                            </div>
-                        </div> -->
-
+                        {% else %}
 
                         <div class="row">
                             <div class="item-option-select">
                                 <h6>Choose Color</h6>
                                 <select name="color" class="form-control" required>
-                                    <option value="" disabled selected>Select</option>
+                                    <!-- <option value="" disabled selected>Select</option> -->
                                     {% for i in single_product.variation_set.colors %}
                                     <option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
                                     {% endfor %}
@@ -142,7 +115,7 @@
                             <div class="item-option-select">
                                 <h6>Select Size</h6>
                                 <select name="size" class="form-control">
-                                    <option value="" disabled selected>Select</option>
+                                    <!-- <option value="" disabled selected>Select</option> -->
                                     {% for i in single_product.variation_set.sizes %}
                                     <option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
                                     {% endfor %}
@@ -151,17 +124,16 @@
                         </div>
 
                         <div class="flex-w flex-r-m p-b-10">
+                        
                             <div class="size-204 flex-w flex-m respon6-next">
                                 
-                                {% if single_product.stock <= 0 %}
-                                <h5 class="text-danger flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">Out of Stock</h5>
-                                {% else %}
-                                <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+                               
+                                <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail  addToCartBtn">
                                     Add to cart
                                 </button>
-                                {% endif %}
                             </div>
                             </form>
+                            {% endif %}
                         </div>	
                     </div>
                    
@@ -236,7 +208,43 @@
 
 
 
-
+<script>
+    $(function() {
+        $('.addToCartBtn').submit(function(event) {
+            event.preventDefault();
+    
+            var product_id = $( '.prod_id').val();
+            var product_id = $( '.prod_id').val();
+            var token = $('input[name=csrfmiddlewaretoken]').val();
+            
+            $.ajax({
+                method: 'post',
+                url: "add_cart",
+                
+                data:{
+                    'product_id' : product_id
+                }
+                ,
+                success: function(response) {
+                    // Update the shopping cart display
+                    $('#cart-count').text(response.cart_count);
+                    $('#cart-total').text(response.cart_total);
+    
+                    // Show a success message
+                    alert('Item added to cart!');
+                },
+                error: function(response) {
+                    // Show an error message
+                    alert('An error occurred while adding the item to the cart.');
+                }
+            });
+        });
+    });
+    </script>
+   
+    
+    
+    
 
 
 

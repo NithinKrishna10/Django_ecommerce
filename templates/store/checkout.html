@@ -12,7 +12,7 @@
 
 <div class="row">
 	<aside class="col-lg-6">
-<div class="card">
+<!-- <div class="card">
   <div class="card-body">
     <h4 class="card-title mb-4">Billing Address</h4>
     <form action="{% url 'place_order' %}" method="POST">
@@ -73,9 +73,30 @@
 
 
   </div>
-</div> <!-- card.// -->
+</div>  -->
+<!-- <button onclick="myFunction()">hai</button> -->
 
-	</aside> <!-- col.// -->
+<form method="post" action="{% url 'place_order' %}">
+  {% csrf_token %}
+  <hr>
+  {% for address in addresses %}
+      <div>
+          <input type="radio" name="shipping_address" class="addres_sel" required value="{{ address.id }}">
+          <h6>{{ address.name }} </h6><br>
+          {{ address.address1 }}<br>
+          {% if address.address2 %}
+              {{ address.address2 }}<br>
+          {% endif %}
+          {{ address.city }}, {{ address.state }} {{ address.zipcode }}<br>
+          {{ address.country }}
+      </div>
+      <hr>
+  {% endfor %}
+  <h5>Dont have accounts <a href="">Add a new address</a></h5>
+ 
+
+	</aside> 
+  <!-- col.// -->
 	<aside class="col-lg-6">
 
 		<div class="card">
@@ -83,6 +104,8 @@
       <table class="table table-borderless table-shopping-cart">
       <thead class="text-muted">
       <tr class="small text-uppercase">
+
+        
         <th scope="col">Product</th>
         <th scope="col" width="120">Quantity</th>
         <th scope="col" width="120">Price</th>
@@ -126,7 +149,8 @@
       </table>
 
       <button type="submit" name="submit" class="btn btn-primary btn-block">Place Order</button>
-			<a href="{% url 'store_view' %}" class="btn btn-light btn-block">Continue Shopping</a>
+			<button type="submit" id="rzp-button1">Pay With RazorPay</button>
+      <a href="{% url 'store_view' %}" class="btn btn-light btn-block">Continue Shopping</a>
       </form>
 		</div> <!-- card-body.// -->
 		</div> <!-- card.// -->
@@ -144,3 +168,11 @@
 <!-- ========================= SECTION CONTENT END// ========================= -->
 
 {% endblock %}
+
+
+{% block scripts %}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% endblock scripts %}

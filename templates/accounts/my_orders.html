@@ -27,17 +27,28 @@
 				      <th scope="col">Order Total</th>
 					  <th scope="col">Date</th>
 					  <th scope="col">Status</th>
+					  <th scope="col">Cancel</th>
 				    </tr>
 				  </thead>
 				  <tbody>
 						{% for order in orders %}
 				    <tr>
-				      <th scope="row"><a href="{% url 'order_detail' order.order_number %}">{{order.order_number}}</a></th>
-				      <td>{{order.full_name}}</td>
-				      <td>{{order.phone}}</td>
+				      <th scope="row"><a href="{% url 'order_detail' order.id %}">{{order.order_number}}</a></th>
+				      <td>{{order.user.full_name}}</td>
+				      <td>{{order.Shipping.phone}}</td>
 				      <td>${{order.order_total}}</td>
 					   <td>{{order.created_at}}</td>
 					   <td>{{order.status}}</td>
+					   <td>
+						<form action="{% url 'cancel_order' order.id %}" method="POST"> 
+							{% csrf_token %}
+							{% if order.status == 'Cancelled'  %}
+							<p>order Cancelled</p>
+							{% else %}
+							<button type="submit" onclick="showConfirm()" class="btn btn-outline-danger">Cancel</button>
+							{% endif %}
+						  </form>
+					   </td>
 				    </tr>
 				{% endfor %}
 
@@ -55,5 +66,17 @@
 
 
 </section>
+
+<script>
+    function showConfirm() {
+      var confirmed = confirm("Are you sure you want to Block this User?");
+  
+      if (confirmed) {
+          // Perform the action if the user clicks "OK"
+      } else {
+          // Cancel the action if the user clicks "Cancel"
+      }
+  }
+  </script>
 
 {% endblock %}

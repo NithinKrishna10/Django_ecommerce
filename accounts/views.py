@@ -1,10 +1,10 @@
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from orders.models import OrderProduct
 
-from orders.models import Order
+from orders.models import Order,Orders
 from .models import Account, UserProfile
 
 # from accounts.forms import UserAdminCreationForm
@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .forms import RegistrationForm, UserForm, UserProfileForm
 from django.contrib.sites.shortcuts import get_current_site
-
+from .mixins import send_otp_on_phone
 
 
 
@@ -84,6 +84,7 @@ def login_user(request):
     return render(request, "accounts/login.html")
 
 def signout(request):
+    # send_otp_on_phone()
     logout(request)
     # if 'username' in request.session:
     #     request.session.flush()
@@ -93,10 +94,37 @@ def signout(request):
     return redirect('home')
 
 
+
+
+@login_required(login_url='login')
+def edit_profile(request):
+    userprofile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('edit_profile')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=userprofile)
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'userprofile': userprofile,
+    }
+    return render(request, 'accounts/edit_profile.html', context)
+
+
+
+
 @login_required(login_url = 'login')
 def dashboarduser(request):
-    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id)
+    orders = Orders.objects.order_by('-created_at').filter(user_id=request.user.id)
     orders_count = orders.count()
+    
     print(orders_count)
     userprofile = UserProfile.objects.get(user_id=request.user.id)
     context = {
@@ -109,7 +137,7 @@ def dashboarduser(request):
 
 @login_required(login_url='login')
 def my_orders(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    orders = Orders.objects.filter(user=request.user).order_by('-created_at')
     context = {
         'orders': orders,
     }
@@ -117,15 +145,74 @@ def my_orders(request):
 
 @login_required(login_url='login')
 def order_detail(request, order_id):
-    order_detail = OrderProduct.objects.filter(order__order_number=order_id)
-    order = Order.objects.get(order_number=order_id)
+    
+    
+    order = Orders.objects.get(id=order_id)
+    # num = order.order_number
+    order_detail = OrderProduct.objects.filter(order_number=order.order_number)
     subtotal = 0
+    
+    
+    
     for i in order_detail:
         subtotal += i.product_price * i.quantity
-
+ 
+    
+    
+    # orderdetail = OrderProduct.objects.filter(order=order_id)
+    # # orderdetail = OrderProduct.objects.get(order=order_id)
+    # order = Order.objects.get(pk=order_id)
+    
+    
+    
+    # for i in orderdetail:
+    #     subtotal += i.product_price * i.quantity
+    # print(subtotal)
     context = {
         'order_detail': order_detail,
         'order': order,
         'subtotal': subtotal,
     }
     return render(request, 'accounts/order_detail.html', context)
+
+
+# def order_detail(request, order_id):
+#     order = Order.objects.get(order_number = order_id)
+#     order_detail = OrderProduct.objects.filter(order__order_number=order_id)
+#     order_detail.
+#     subtotal = 0
+    
+#     for i in order_detail:
+#         subtotal += i.product_price * i.quantity
+
+#     context = {
+#         'order_detail': order_detail,
+#         'order': order,
+#         'subtotal': subtotal,
+#     }
+#     return render(request, 'accounts/order_detail.html', context)
+
+
+@login_required(login_url='login')
+def cancel_order(request, order_id):
+    order = Order.objects.get(id=order_id)
+    if request.method == 'POST':
+        order.status = 'Cancelled'
+        order.save()
+
+
+    return redirect('my_orders')
+
+
+@login_required(login_url='login')
+def orderproducts(request):
+    
+    orderitems = OrderProduct.objects.all()
+    orders = Orders.objects.filter(user=request.user)
+    
+    context = {
+        'orderitems' : orderitems,
+        'orders' : orders,
+    }
+    
+    return render(request , 'accounts/orderproducts.html',context)
