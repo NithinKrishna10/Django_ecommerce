@@ -31,8 +31,10 @@
 				<div class="card" style="text-align:center;">
 					<div class="card-body">
 						<img src="{{userprofile.profile_picture.url}}" alt="User Profile Picture" width="50" height="50" style="border-radius:50%;">
+						<p>{{user.first_name}}</p>
 						<p class="mb-0">{{user.email}}</p>
 						<p>{{user.phone_number}}</p>
+						
 					</div>
 				</div>
 			</div>
@@ -61,7 +63,5 @@
 </div>
 </div>
 
-
-</section>
 
 {% endblock %}

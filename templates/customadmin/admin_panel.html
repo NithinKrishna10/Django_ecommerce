@@ -1,0 +1,309 @@
+{% extends 'customadmin/adminbase.html' %}
+{% load static %}
+
+  
+{% block content %}
+
+
+
+<style>
+    .graph_button {
+      border: 1px solid rgb(0, 0, 0);
+      background-color: white;
+      border-radius: 5px;
+      margin: 5px;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 5px;
+    }
+  
+    .graph_button:hover {
+      background-color: rgb(0, 195, 255);
+      color: rgb(251, 252, 253);
+    }
+  </style>
+  </head>
+ 
+    <div class="pagetitle">
+      <h1 style="color: rgb(84, 75, 75);">Dashboard</h1>
+  
+    </div><!-- End Page Title -->
+    <section class="section dashboard">
+      <div class="row">
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+            <!--////////////////////////////////////////////////////////////////////////////////////////////////////-->
+            <!-- Sales Card -->
+             <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Sales <span>| Today</span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 id="sales">{{sales}}</h6>
+                      <span class="text-success small pt-1 fw-bold">12%</span> <span
+                        class="text-muted small pt-2 ps-1">increase</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- End Sales Card --> 
+            <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+            <!-- Revenue Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card revenue-card">
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Revenue <span>| This Month</span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>Rs. <span id="revenue" style="color: black;">{{revenue}}</span></h6>
+                      <span class="text-success small pt-1 fw-bold">8%</span> <span
+                        class="text-muted small pt-2 ps-1">increase</span>
+                    </div>
+                  </div>
+                </div>
+  
+              </div>
+            </div><!-- End Revenue Card --> 
+            <!--//////////////////////////////////////////////////////////////////////////////////////////////////-->
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-xl-12">
+              <div class="card info-card customers-card">
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+  
+                <!--            ////////////////////////////////////////////////////////////////////       live customer count    -->
+  
+                <div class="card-body">
+                  <h5 class="card-title">Customers <span>| Total</span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 id="customer_count">{{customer_count}}</h6>
+                      <!--                      <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+            </div> 
+            <!--///////////////////////////////////////////////////////////////////     End Customers Card -->
+  
+            <!-- Reports -->
+            <div class="col-12">
+              <div class="card">
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <div style="display: flex;margin: 10px;">
+                    <form action="{% url 'dashboard' %}" method="POST">
+                      {% csrf_token %}
+                      <input class="graph_button" value='today' name='duration' type="submit">
+                      <input class="graph_button" value='last_7_days' name='duration' type="submit">
+                      <input class="graph_button" value='last_month' name='duration' type="submit">
+                      <input class="graph_button" value='last_year' name='duration' type="submit">
+                    </form>
+  
+                  </div>
+  
+                  <h5 class="card-title">Graph Report</h5>
+                  {% if duraion == 'today' %}
+                  <label style="color: rgb(239, 0, 0);margin: 20px;">Showing Results of Today</label>
+                  {% elif duration == 'last_7_days' %}
+                  <label style="color: rgb(222, 8, 8);margin: 20px;">Showing Results of The Last 7 Days</label>
+                  {% elif duration == 'last_month' %}
+                  <label style="color: rgb(222, 8, 8);margin: 20px;">Showing Results of The Last month</label>
+                  {% elif duration == 'last_year' %}
+                  <label style="color: rgb(222, 8, 8);margin: 20px;">Showing Results of The Year month</label>
+                  {% else %}
+                  <label style="color: rgb(11, 10, 10);margin: 20px;">Nothing To Show. Filter to get the Results.</label>
+                  <div>
+             
+                    <!-- <div style="text-align: center;margin: 30px;">
+                                <img src="/media/message_images/no data.png"  width="30%">
+              
+                    </div> -->
+                    <div style="color: black;text-align: center;font-size: 20px;">Oops! You have not selected any filter</div>
+                    <p style="color: rgb(133, 127, 127);text-align: center;">
+                     Please select any filter to see the results.
+                    </p>
+                 </div>
+                  {% endif %}
+  
+                  <div id="reportsChart"></div>
+                  <!-- charts -->
+                  {% if duration != '' %}
+                  <label style="color: rgb(14, 1, 98);">Total Sales </label>
+                  <div id="barChart" style="min-height: 400px;" class="echart"></div>
+                  <label style="color: rgb(4, 15, 127);">Total Users</label>
+                  <div id="lineChart" style="min-height: 400px;" class="echart"></div>
+                  <label style="color: rgb(6, 26, 118);">Payment Records</label>
+                  <div id="donutChart" style="min-height: 400px;" class="echart"></div>
+                  {% endif %}
+  
+                  <script>
+                    var sales_graph_data = '{{sales_graph_data}}'
+                    var sales_graph_category = '{{sales_graph_category}}'
+  
+                    var user_graph_data = '{{user_graph_data}}'
+                    var user_graph_category = '{{user_graph_category}}'
+  
+                    var paypal_payment_method_graph_data = '{{paypal_payment_method_graph_data}}'
+                    var razorpay_payment_method_graph_data = '{{razorpay_payment_method_graph_data}}'
+                    var cod_payment_method_graph_data = '{{cod_payment_method_graph_data}}'
+  
+  
+                    sales = sales_graph_data.replace('[', '')
+                    sales = sales.replace(']', '')
+                    sales = sales.split(',')
+                    console.log(sales)
+  
+                    sales_category = sales_graph_category.replace('[', '')
+                    sales_category = sales_category.replace(']', '')
+                    sales_category = sales_category.split(',')
+                    console.log(sales_category)
+  
+                    new_user = user_graph_data.replace('[', '')
+                    new_user = new_user.replace(']', '')
+                    new_user = new_user.split(',')
+                    console.log(new_user)
+  
+                    user_category = user_graph_category.replace('[', '')
+                    user_category = user_category.replace(']', '')
+                    user_category = user_category.split(',')
+                    console.log(user_category)
+                    document.addEventListener("DOMContentLoaded", () => {
+                      echarts.init(document.querySelector("#barChart")).setOption({
+                        xAxis: {
+                          type: 'category',
+                          data: sales_category
+                        },
+                        yAxis: {
+                          type: 'value'
+                        },
+                        series: [{
+                          data: sales,
+                          type: 'bar'
+                        }]
+                      });
+                    });
+                    // line graph
+                    document.addEventListener("DOMContentLoaded", () => {
+                      echarts.init(document.querySelector("#lineChart")).setOption({
+                        xAxis: {
+                          type: 'category',
+                          data: user_category
+                        },
+                        yAxis: {
+                          type: 'value'
+                        },
+                        series: [{
+                          data: new_user,
+                          type: 'line',
+                          smooth: true
+                        }]
+                      });
+                    });
+                    // pi graph
+                    document.addEventListener("DOMContentLoaded", () => {
+                      echarts.init(document.querySelector("#donutChart")).setOption({
+                        tooltip: {
+                          trigger: 'item'
+                        },
+                        legend: {
+                          top: '5%',
+                          left: 'center'
+                        },
+                        series: [{
+                          name: 'Access From',
+                          type: 'pie',
+                          radius: ['40%', '70%'],
+                          avoidLabelOverlap: false,
+                          label: {
+                            show: false,
+                            position: 'center'
+                          },
+                          emphasis: {
+                            label: {
+                              show: true,
+                              fontSize: '18',
+                              fontWeight: 'bold'
+                            }
+                          },
+                          labelLine: {
+                            show: false
+                          },
+                          data: [{
+                            value: paypal_payment_method_graph_data,
+                            name: 'Paypal'
+                          },
+                          {
+                            value: razorpay_payment_method_graph_data,
+                            name: 'Razorpay'
+                          },
+                          {
+                            value: cod_payment_method_graph_data,
+                            name: 'COD'
+                          },
+  
+                          ]
+                        }]
+                      });
+                    });
+                  </script>
+                  <!-- End Donut Chart -->
+  
+                </div>
+    </section>
+  
+  
+  {% endblock %}

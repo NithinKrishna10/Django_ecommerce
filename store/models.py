@@ -2,50 +2,6 @@ from django.urls import reverse
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-# Create your models here.
-# class Category(models.Model):
-#     title=models.CharField(max_length=100)
-#     slug=models.CharField(max_length=50)
-#     created_at=models.DateTimeField
-
-#     def __str__(self):
-#         return self.title
-
-
-# class Brand(models.Model):
-#     title=models.CharField(max_length=50)
-
-
-#     def __str__(self):
-#         return self.title
-
-# class Size(models.Model):
-#     title=models.CharField(max_length=20)
-
-#     def __str__(self):
-#         return self.title
-
-# class Color(models.Model):
-#     title=models.CharField(max_length=50)
-#     color_code=models.CharField(max_length=50)
-
-#     def __str__(self):
-#         return self.title
-
-
-# class Product(models.Model):
-#     title=models.CharField(max_length=50)
-#     image=models.ImageField(upload_to='products')
-#     slug=models.CharField(max_length=50)
-#     decription=models.TextField()
-#     category=models.ForeignKey(Category, on_delete=models.CASCADE)
-#     brand=models.ForeignKey(Brand, on_delete=models.CASCADE)
-#     size=models.ForeignKey(Size, on_delete=models.CASCADE)
-#     color=models.ForeignKey(Color, on_delete=models.CASCADE)
-#     status=models.BooleanField()
-
-#     def __str__(self):
-#         return self.title
 
 # ============================================================ #
 class Gender(models.Model):
@@ -68,8 +24,7 @@ class Category(models.Model):
 
 class Brand(models.Model):
     brand_name = models.CharField(max_length=200, unique=True)
-    brand_description = models.TextField()
-    brand_image = models.ImageField(upload_to='photos/brand', null=True)
+    image = models.ImageField(upload_to='photos/brand', null=True)
 
     def __str__(self):
         return self.brand_name

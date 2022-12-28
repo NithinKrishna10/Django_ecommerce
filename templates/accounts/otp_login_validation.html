@@ -1,0 +1,97 @@
+{% extends 'indexhome.html' %}
+
+
+{% block content %}
+
+
+
+<div style="display: flex;justify-content: center;">
+    <div
+        style="border:2px solid rgb(255, 255, 255);margin:5%;padding:50px;background-color: rgb(24, 13, 35);border-radius: 10px;color: rgb(10, 9, 9);">
+        <h3 style="color: white;margin: 0px;">Sign in with OTP</h3>
+        <p>Enter the otp send to your registered phone number accociated with your Aldrich account</p>
+        <div id="message"></div>
+        <div style="margin-top: 10px;">
+            <div class="auto_change">
+                <p style="color: white;">Enter Valid OTP</p>
+                <div id="err" style="color:rgb(255, 0, 0) ;"></div>
+                <input type="text" id="otp_1" placeholder="0" class="input_box"
+                    style="width:50px;height:50px;font-size: 30px;text-align: center;" maxlength="1" name="otp_1">
+                <input type="text" id="otp_2" placeholder="0" class="input_box"
+                    style="width:50px;height:50px;font-size: 30px;text-align: center;" maxlength="1" name="otp_2">
+                <input type="text" id="otp_3" placeholder="0" class="input_box"
+                    style="width:50px;height:50px;font-size: 30px;text-align: center;" maxlength="1" name="otp_3">
+                <input type="text" id="otp_4" placeholder="0" class="input_box"
+                    style="width:50px;height:50px;font-size: 30px;text-align: center;" maxlength="1" name="otp_4">
+                    
+            </div>
+            <p style="margin:20px 0px;"><input type="button" value="sign in" onclick="validate()"
+                    class="sign_button"></p>
+            <div style="display: flex;flex-direction: column;font-size: 14px;">
+                <a href="#" class="links">Resend the OTP</a>
+                <p><a href="/user_sign_in" class="links">sign in</a> | with username and password</p>
+                <p>New to Aldrich |<a href="/user_sign_up" class="links"> sign up</a></p>
+            </div>
+            </p>
+        </div>
+    </div>
+</div>
+<script>
+    function validate() {
+        var otp_1 = document.getElementById('otp_1').value
+        var otp_2 = document.getElementById('otp_2').value
+        var otp_3 = document.getElementById('otp_3').value
+        var otp_4 = document.getElementById('otp_4').value
+        var err = document.getElementById('err')
+        if (otp_1 == '' || otp_2 == '' || otp_3 == '' || otp_4 == '') {
+            console.log('All fields should be filled');
+            err.innerHTML = 'fields cannnot be empty'
+        }
+        else {
+            err.innerHTML = ''
+            console.log('trying to log in with otp');
+            try_to_signin(otp_1, otp_2, otp_3, otp_4)
+        }
+    }
+    function try_to_signin(otp_1, otp_2, otp_3, otp_4) {
+
+        $.ajaxSetup({
+            data: { csrfmiddlewaretoken: '{{ csrf_token }}' }
+        })
+        $.ajax({
+            url: '/user_otp_sign_in_validation',
+            method: 'post',
+            data: { 'otp_1': otp_1, 'otp_2': otp_2, 'otp_3': otp_3, 'otp_4': otp_4},
+            success: function (response) {
+                resp = response['user_authentication_status']
+                if (resp == 'w') {
+                    console.log('wrong_otp')
+                }
+                else if (resp == 'approved') {
+                    console.log('redirecting to user home')
+                    window.location.href = '/user_home'
+                }
+            },
+        })
+    }
+    var container = document.getElementsByClassName("auto_change")[0];
+    container.onkeyup = function (e) {
+        var target = e.srcElement;
+        var maxLength = parseInt(target.attributes["maxlength"].value, 10);
+        var myLength = target.value.length;
+        if (myLength >= maxLength) {
+            var next = target;
+            while (next = next.nextElementSibling) {
+                if (next == null)
+                    break;
+                if (next.tagName.toLowerCase() == "input") {
+                    next.focus();
+                    break;
+                }
+            }
+        }
+    }
+</script>
+
+
+{% endblock %}

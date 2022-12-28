@@ -8,6 +8,7 @@ urlpatterns = [
     path('d',views.admin_login,name='admin_login'),
     path('dashboard/',views.dashboard,name='dashboard'),
     path('user_management',views.user_management,name='user_management'),
+    # path('admin_get_graph_data', views.admin_get_graph_data),
     
     # =================================== product ===================================
     path('product_manage',views.product,name='product_manage'),
@@ -38,4 +39,6 @@ urlpatterns = [
     path('cancelorder/<int:order_id>/', views.cancelorder, name='cancelorder'),
     path('orderdetail/<int:order_id>/', views.orderdetail, name='orderdetail'),
     path('productsorderd/', views.productsorderd, name='productsorderd'),
+    path('adminOrderUpdate/<int:order_id>/',views.adminOrderUpdate,name='adminOrderUpdate'),
 ]
+

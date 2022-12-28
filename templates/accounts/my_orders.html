@@ -27,27 +27,31 @@
 				      <th scope="col">Order Total</th>
 					  <th scope="col">Date</th>
 					  <th scope="col">Status</th>
+					  <th scope="col">Payment</th>
 					  <th scope="col">Cancel</th>
 				    </tr>
 				  </thead>
 				  <tbody>
 						{% for order in orders %}
 				    <tr>
+						<th><img class="img-fluid" src="{{ orders.product.images.url }}" alt=""></th>
 				      <th scope="row"><a href="{% url 'order_detail' order.id %}">{{order.order_number}}</a></th>
 				      <td>{{order.user.full_name}}</td>
 				      <td>{{order.Shipping.phone}}</td>
 				      <td>${{order.order_total}}</td>
 					   <td>{{order.created_at}}</td>
 					   <td>{{order.status}}</td>
+					   <td>{{order.payment_mode}}</td>
 					   <td>
-						<form action="{% url 'cancel_order' order.id %}" method="POST"> 
+						<!-- <form action="{% url 'cancel_order' order.id %}" method="POST">  -->
 							{% csrf_token %}
+							<input type="hidden" class="can" value="{{order.id}}">
 							{% if order.status == 'Cancelled'  %}
 							<p>order Cancelled</p>
 							{% else %}
-							<button type="submit" onclick="showConfirm()" class="btn btn-outline-danger">Cancel</button>
+							<button type="submit" id="cancel-btn"  class="btn btn-outline-danger ">Cancel</button>
 							{% endif %}
-						  </form>
+						  <!-- </form> -->
 					   </td>
 				    </tr>
 				{% endfor %}
@@ -77,6 +81,46 @@
           // Cancel the action if the user clicks "Cancel"
       }
   }
+
+
+  function confirmDelete() {
+	swal({
+		title: "Are you sure?",
+		text: "Once deleted, you will not be able to recover this imaginary file!",
+		icon: "warning",
+		buttons: true,
+		dangerMode: true,
+	  })
+	  .then((willDelete) => {
+		if (willDelete) {
+			var order_id = ('.can').val();
+			var token = $("[name='csrfmiddlewaretoken']").val();
+			$.ajax({
+			
+				method: 'POST',
+				
+				url: '/accounts=/cancelOrderS',
+			   
+			   // data: data,
+				data: {  'order_id': 'order_id',  csrfmiddlewaretoken : token, },
+			   
+				success: function (response) {
+				   
+						console.log('order placed successfully')
+						window.location.href = '/my_orders'
+				  
+				}
+			})
+		  swal("Poof! Your imaginary file has been deleted!", {
+			icon: "success",
+		  });
+		} else {
+		  swal("Your imaginary file is safe!");
+		}
+	  });
+}
+
+  
   </script>
 
 {% endblock %}

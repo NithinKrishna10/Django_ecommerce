@@ -16,7 +16,7 @@
                         <!-- Start .row -->
                         <div class="col-lg-6">
                             <!-- col-lg-6 start here -->
-                            <div class="invoice-logo"><img src="{% static '/images/logo.png' %}" alt="Invoice logo" style="max-height: 40px;"></div>
+                            <div class="invoice-logo"><h1 class=" text-info">BLAZE STORE</h1></div>
                         </div>
                         <!-- col-lg-6 end here -->
                         <div class="col-lg-6">
@@ -40,7 +40,7 @@
                                         <li><strong>Order</strong> #{{order.order_number}}</li>
                                         <li><strong>Transaction ID</strong> {{order.payment.payment_id}}</li>
                                         <li><strong>Order Date:</strong> {{order.created_at}}</li>
-                                        <li><strong>Status:</strong> {{order.payment.status}}</li>
+                                        <li><strong>Status:</strong> {{order.payment_mode}}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -79,20 +79,20 @@
                                             <tr>
                                                 <th></th>
                                                 <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">${{subtotal}} RS</th>
+                                                <th class="text-center">₹{{subtotal}} RS</th>
                                             </tr>
                                             <tr>
                                                 <th></th>
 
                                                 <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">${{order.tax}} RS</th>
+                                                <th class="text-center">₹{{order.tax}} RS</th>
                                             </tr>
 
                                             <tr>
                                                 <th></th>
 
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">${{order.order_total}} RS</th>
+                                                <th class="text-center">₹{{order.order_total}} RS</th>
                                             </tr>
                                         </tfoot>
                                     </table>

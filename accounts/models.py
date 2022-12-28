@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+import datetime
+# from datetime import datetime
+
+current_date = datetime.date.today()
+
 
 # Create your models here.
 
@@ -54,7 +59,9 @@ class Account(AbstractBaseUser):
     is_staff        = models.BooleanField(default=False)
     is_active        = models.BooleanField(default=True)
     is_superadmin    = models.BooleanField(default=False)
-
+    signup_day = models.CharField(max_length = 50,default=current_date.day)
+    signup_month = models.CharField(max_length = 50,default=current_date.month)
+    signup_year = models.CharField(max_length = 50,default=current_date.year)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 

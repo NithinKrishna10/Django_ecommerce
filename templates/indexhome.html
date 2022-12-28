@@ -776,6 +776,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 	<!-- Modal1 -->
 	
+    <!-- <script src="https://www.paypal.com/sdk/js?client-id=ATp-MZLvKozaNY90FKoyByOVIlVmg6TPBMI36o5x6uxJl7JmfI4XTIDDUJ0I5nB1nXfVG6RGS3pebR6x&currency=USD&intent=capture&enable-funding=venmo" data-sdk-integration-source="integrationbuilder"></script> -->
+	<!-- <script src="https://www.paypal.com/sdk/js?client-id=ATp-MZLvKozaNY90FKoyByOVIlVmg6TPBMI36o5x6uxJl7JmfI4XTIDDUJ0I5nB1nXfVG6RGS3pebR6x&currency=USD"></script> -->
 
 <!--===============================================================================================-->	
 	<script src="{% static 'main/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
@@ -876,9 +878,13 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			})
 		});
 	</script>
+
+	
 <!--===============================================================================================-->
 	<script src="{% static 'main/js/main.js' %}"></script>
 	<script src="{% static 'js/checkout.js' %}"></script>
+	<script src="{% static 'js/cart.js' %}"></script>
+	<script src="{% static 'js/jquery-3.6.3.min.js' %}"></script>
 	{% block scripts %}
     {% endblock scripts %}
 

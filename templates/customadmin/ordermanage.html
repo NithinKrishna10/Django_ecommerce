@@ -32,6 +32,7 @@
               <th scope="col">Date</th>
               <th scope="col">Status</th>
               <th scope="col">Update</th>
+              <th scope="col">Cancel</th>
             </tr>
           </thead>
           <tbody>
@@ -40,13 +41,20 @@
               <!-- <th scope="row"><img class="img-fluid"  src="{{ cr.images.url }}" alt=""></th> -->
               <!-- <th scope="row"><a href="#"></a></th> -->
               <!-- <td>{{ cr.id}}</td> -->
-              <td>{{ order.full_name}}</td>
-              <td>{{ order.email}}</td>
-              <td>{{ order.phone}}</td>
+              <td>{{ order.Shipping.name}}</td>
+              <td>{{ order.Shipping.user.email}}</td>
+              <td>{{ order.Shipping.phone}}</td>
               <td>{{ order.created_at}}</td>
               <td><span class="badge bg-success"><a style="text-decoration: none; color: white;" href="{% url 'orderdetail' order.id %}">{{ order.status}}</a></span></td>
+              
               <td>
-                
+                <form action="{% url 'adminOrderUpdate' order.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit"  class="btn btn-outline-danger">Update</button>
+                </form>
+              </td>
+              <td>
+              
                 <form action="{% url 'cancelorder' order.id %}" method="POST">
                     {% csrf_token %}
                     {% if order.status == 'Cancelled'  %}

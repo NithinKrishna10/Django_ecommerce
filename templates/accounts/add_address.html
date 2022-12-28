@@ -1,0 +1,97 @@
+{% extends 'indexhome.html' %}
+
+
+{% block content %}
+<!-- <form action=""   method="POST">
+    {% csrf_token %}
+   {{adform }}
+</form> -->
+
+
+
+<section class="section-conten padding-y bg">
+
+    {% include 'includes/alerts.html' %}
+    <div class="container">
+        <div class="row">
+        
+        <main class="col-md-9">
+            <article class="card">
+            <header class="card-header">
+                <strong class="d-inline-block mr-3">Edit your profile</strong>
+    
+            </header>
+            <div class="card-body">
+                <div class="text-right">
+                    
+                </div>
+                <div class="row">
+                <div class="col-md-12 bg-dark">
+                    <form action="{% url 'add_address' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group " >
+                                <label>Name</label>
+                                {{adform.user}}
+                            </div>
+                            
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6" >
+                                <label>Name</label>
+                                {{adform.name}}
+                            </div>
+                            <div class="form-group col-md-6" >
+                                <label>Address1</label>
+                                {{adform.address1}}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6" >
+                                <label>Address2</label>
+                                {{adform.address2}}
+                            </div>
+                            <div class="form-group col-md-6" >
+                                <label>City</label>
+                                {{adform.city}}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6" >
+                                <label>Phoen Number</label>
+                                {{adform.phone}}
+                            </div>
+                            <div class="form-group col-md-6" >
+                               <label>Pincode</label>
+                                {{adform.pincode}}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>State</label>
+                                {{adform.state}}
+                            </div>
+                            <div class="form-group col-md-6" >
+                                <label>Country</label>
+                                {{adform.country}}
+                            </div>
+                        </div>
+                      
+                         
+                        </div>
+                        <input type="submit" value="Save" class="btn btn-primary">
+                    </form>
+                </div>
+    
+                </div> <!-- row.// -->
+            </div> <!-- card-body .// -->
+    
+            </article> <!-- order-group.// -->
+        </main>
+    </div> <!-- row.// -->
+    </div>
+    
+    
+    </section>
+{% endblock %}

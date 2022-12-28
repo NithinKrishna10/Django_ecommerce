@@ -1,11 +1,16 @@
 
 $(document).ready(function () {
+
+
+
+
+    
     $('#rzp-button1').click(function (e) {
         e.preventDefault();
 
         var address = $(".addres_sel:checked").val();
         var token = $("[name='csrfmiddlewaretoken']").val();
-console.log("hai")
+        console.log("hai")
         console.log(address);
         if (address == "") {
             alert("select address")
@@ -47,7 +52,11 @@ console.log("hai")
                         data: data,
                        
                         success: function (responsec) {
-                            swal(responsec.status)
+                            // swal(responsec.status)
+                            if (responsec['status'] == 'Your order placed') {
+                                console.log('order placed successfully')
+                                window.location.href = "/accounts/my_orders"
+                            }
                             
                         }
                     });

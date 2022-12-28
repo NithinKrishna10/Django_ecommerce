@@ -4,15 +4,14 @@
 {% block content %}
 
 
-
 <section class="section-content padding-y bg " style="margin-top: 15vh;">
-<div class="container-fluid">
+  <div class="container-fluid">
 
-<!-- ============================ COMPONENT 1 ================================= -->
+    <!-- ============================ COMPONENT 1 ================================= -->
 
-<div class="row">
-	<aside class="col-lg-6">
-<!-- <div class="card">
+    <div class="row">
+      <aside class="col-lg-6 col-12">
+        <!-- <div class="card">
   <div class="card-body">
     <h4 class="card-title mb-4">Billing Address</h4>
     <form action="{% url 'place_order' %}" method="POST">
@@ -74,96 +73,97 @@
 
   </div>
 </div>  -->
-<!-- <button onclick="myFunction()">hai</button> -->
-
-<form method="post" action="{% url 'place_order' %}">
-  {% csrf_token %}
-  <hr>
-  {% for address in addresses %}
-      <div>
-          <input type="radio" name="shipping_address" class="addres_sel" required value="{{ address.id }}">
-          <h6>{{ address.name }} </h6><br>
-          {{ address.address1 }}<br>
-          {% if address.address2 %}
-              {{ address.address2 }}<br>
-          {% endif %}
-          {{ address.city }}, {{ address.state }} {{ address.zipcode }}<br>
-          {{ address.country }}
-      </div>
-      <hr>
-  {% endfor %}
-  <h5>Dont have accounts <a href="">Add a new address</a></h5>
- 
-
-	</aside> 
-  <!-- col.// -->
-	<aside class="col-lg-6">
-
-		<div class="card">
-		<div class="card-body">
-      <table class="table table-borderless table-shopping-cart">
-      <thead class="text-muted">
-      <tr class="small text-uppercase">
-
-        
-        <th scope="col">Product</th>
-        <th scope="col" width="120">Quantity</th>
-        <th scope="col" width="120">Price</th>
-
-      </tr>
-      </thead>
-      <tbody>
-
-      {% for cart_item in cart_items %}
-      <tr>
-      	<td>
-      		<figure class="itemside align-items-center">
-      			<div class="aside"><img  src="{{ cart_item.product.images.url }}" class="img-sm"></div>
-      			<figcaption class="info">
-      				<a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
-      				<p class="text-muted small">
-      					{% if cart_item.variations.all %}
-      						{% for item in cart_item.variations.all %}
-      							{{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }} <br>
-      						{% endfor %}
-      					{% endif %}
-      				</p>
-      			</figcaption>
-      		</figure>
-      	</td>
-      	<td>
-      		<!-- col.// -->
-      				<label for="">{{cart_item.quantity}}</label>
-      	</td>
-      	<td>
-      		<div class="price-wrap">
-      			<var class="price">$ {{ cart_item.sub_total }}</var>
-      			<small class="text-muted"> $ {{ cart_item.product.price }} each </small>
-      		</div> <!-- price-wrap .// -->
-      	</td>
-
-      </tr>
-      {% endfor %}
-
-      </tbody>
-      </table>
-
-      <button type="submit" name="submit" class="btn btn-primary btn-block">Place Order</button>
-			<button type="submit" id="rzp-button1">Pay With RazorPay</button>
-      <a href="{% url 'store_view' %}" class="btn btn-light btn-block">Continue Shopping</a>
-      </form>
-		</div> <!-- card-body.// -->
-		</div> <!-- card.// -->
+        <!-- <button onclick="myFunction()">hai</button> -->
+        <input value="none" style="display: none;" id="addressId">
+        <form method="post" action="{% url 'order_place' %}">
+          {% csrf_token %}
+          <hr>
+          {% for address in addresses %}
+          <div>
+            <input type="radio" name="shipping_address" class="addres_sel" required value="{{ address.id }}" onchange="addressChange('{{ address.id }}')">
+            <h6>{{ address.name }} </h6><br>
+            {{ address.address1 }}<br>
+            {% if address.address2 %}
+            {{ address.address2 }}<br>
+            {% endif %}
+            {{ address.city }}, {{ address.state }} {{ address.zipcode }}<br>
+            {{ address.country }}
+          </div>
+          <hr>
+          {% endfor %}
+          <h5>Dont have accounts <a href="{% url 'add_address' %}">Add a new address</a></h5>
 
 
-</aside> <!-- col.// -->
+      </aside>
+      <!-- col.// -->
+      <aside class="col-lg-6 col-12">
+
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-borderless table-shopping-cart">
+              <thead class="text-muted">
+                <tr class="small text-uppercase">
 
 
-</div> <!-- row.// -->
+                  <th scope="col">Product</th>
+                  <th scope="col" width="120">Quantity</th>
+                  <th scope="col" width="120">Price</th>
 
-<!-- ============================ COMPONENT 1 END .// ================================= -->
+                </tr>
+              </thead>
+              <tbody>
 
-</div> <!-- container .//  -->
+                {% for cart_item in cart_items %}
+                <tr>
+                  <td>
+                    <figure class="itemside align-items-center">
+                      <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm"></div>
+                      <figcaption class="info">
+                        <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{cart_item.product.product_name }}</a>
+                        <p class="text-muted small">
+                          {% if cart_item.variations.all %}
+                          {% for item in cart_item.variations.all %}
+                          {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }} <br>
+                          {% endfor %}
+                          {% endif %}
+                        </p>
+                      </figcaption>
+                    </figure>
+                  </td>
+                  <td>
+                    <!-- col.// -->
+                    <label for="">{{cart_item.quantity}}</label>
+                  </td>
+                  <td>
+                    <div class="price-wrap">
+                      <var class="price">₹ {{ cart_item.sub_total }}</var>
+                      <small class="text-muted"> ₹ {{ cart_item.product.price }} each </small>
+                    </div> <!-- price-wrap .// -->
+                  </td>
+
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+
+            <button type="submit" name="submit" class="btn btn-primary btn-block">Place Order</button>
+            <button class="btn btn-info btn-block" type="submit" id="rzp-button1">Pay With RazorPay</button>
+            <div id="paypal-button-container" class="mt-2"></div>
+            <a href="{% url 'store_view' %}" class="btn btn-light btn-block">Continue Shopping</a>
+            </form>
+          </div> <!-- card-body.// -->
+        </div> <!-- card.// -->
+
+
+      </aside> <!-- col.// -->
+
+
+    </div> <!-- row.// -->
+
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+
+  </div> <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
 
@@ -171,8 +171,156 @@
 
 
 {% block scripts %}
+<script src="https://www.paypal.com/sdk/js?client-id=ATp-MZLvKozaNY90FKoyByOVIlVmg6TPBMI36o5x6uxJl7JmfI4XTIDDUJ0I5nB1nXfVG6RGS3pebR6x&currency=USD"></script>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+<!-- 
+<script>
+
+
+  function addressChange(id){
+    document.getElementById('addressId').value = id;
+
+  }
+  let firstAddress = document.getElementsByClassName('addres_sel')[0].value;
+  addressChange(firstAddress);
+
+
+
+  paypal
+        .Buttons({
+            createOrder: function () {
+                
+                return fetch("/create-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        address: document.getElementById('addressId').value,
+                        payment_mode: 'PAID BY PAYPAL',
+                    }),
+                })
+                    .then(res => {
+                        if (res.ok) return res.json()
+                        return res.json().then(json => Promise.reject(json))
+                    })
+                    .then(({ id }) => {
+                        return id
+                    })
+                    .catch(e => {
+                        console.error(e.error)
+                    })
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    window.location.href = 'orderSuccess';
+                })
+            },
+        })
+        .render("#paypal-button-container")
+</script>
+ -->
+
+
+
+<script>
+  paypal.Buttons({
+
+    
+      // Sets up the transaction when a payment button is clicked
+      createOrder: (data, actions) => {
+        var address = $(".addres_sel:checked").val();
+        var token = $("[name='csrfmiddlewaretoken']").val();
+        console.log("hai")
+        console.log(address);
+        if (address == "") {
+            alert("select address")
+            return false;
+        }
+        else {
+
+            $.ajax({
+                type: "GET",
+                url: "/orders/proceed-to-pay",
+
+                success: function (response) {
+                    console.log(response);
+                }
+            });
+
+          return actions.order.create({
+              purchase_units: [{
+                  amount: {
+                      value: "1" // Can also reference a variable or function
+                  }
+              }]
+        
+            });
+          }
+      },
+    
+     
+      // Finalize the transaction after payer approval
+      onApprove: (data, actions) => {
+          return actions.order.capture().then(function (orderData) {
+              // Successful capture! For dev/demo purposes:
+              console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+              const transaction = orderData.purchase_units[0].payments.captures[0];
+             // alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+              //$.ajaxSetup({
+               //   data: { csrfmiddlewaretoken: '{{csrf_token}}' }
+              //})
+              var address = $(".addres_sel:checked").val();
+              var token = $("[name='csrfmiddlewaretoken']").val();
+              console.log("hai")
+              console.log(address);
+              data = {
+                "shipping_address": address,
+                "payment_mode": "Paid by Paypal",
+                "payment_id": transaction.id,
+                csrfmiddlewaretoken : token,
+      
+              },
+              $.ajax({
+
+                  method: 'POST',
+                  
+                  url: '/orders/place_order',
+                 
+                 // data: data,
+                  data:data,
+                 
+                  success: function (response) {
+                    swal({
+                      title: "Congrats!",
+                      text: "Order Placed Succesfully!",
+                      type: "success"
+                  }).then(function() {
+                      window.location = " /accounts/my_orders";
+                  });
+                 
+                      console.log('order placed successfully')
+                          console.log('order placed successfully')
+                          //window.location.href = '/my_orders'
+                    
+                  }
+              })
+              // When ready to go live, remove the alert and show a success message within this page. For example:
+              // const element = document.getElementById('paypal-button-container');
+              // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+              // Or go to another URL:  actions.redirect('thank_you.html');
+          });
+      }
+  }).render('#paypal-button-container');
+
+  
+</script>
+
+
 {% endblock scripts %}

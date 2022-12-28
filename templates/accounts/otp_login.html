@@ -1,0 +1,90 @@
+{% extends 'indexhome.html' %}
+
+
+{% block content %}
+
+
+
+
+
+<div style="display: flex;justify-content: center;align-items: center;height: 100%;width: 100vw;">
+    <div
+        style="border:2px solid rgb(255, 255, 255);padding:50px;background-color: rgb(24, 13, 35);border-radius: 10px;color: rgb(10, 9, 9);box-shadow: 0px 20px 20px;">
+        <h3 style="color: white;margin: 0px;">Welcome using OTP</h3>
+        <p>Enter your registered phone number accociated with your Aldrich account</p>
+        <div id="message"></div>
+        <div style="margin-top: 10px;">
+
+            <p style="color: white;">Enter your phone number</p>
+            <div id="err" style="color:rgb(255, 0, 0) ;"></div>
+            <input type="number" id="user_contact_number" placeholder="0" class="input_box" style="width:90%;height:50%;font-size: 30px;background-color:rgba(58, 54, 63, 0.7);color: white;" maxlength='10' >
+            
+
+            <p style="margin:20px 0px;"><input type="button" value="sign in" onclick="validate()" class="sign_button"></p>
+            <div style="display: flex;flex-direction: column;font-size: 14px;">
+                <!-- <p><a href="/user_sign_in" class="links">sign in</a> | with username and password</p>
+                <p>New to Aldrich |<a href="/user_sign_up" class="links"> sign up</a></p> -->
+            </div>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validate() {
+        var user_contact_number = document.getElementById('user_contact_number').value
+        var err = document.getElementById('err')
+
+        if (user_contact_number == '') {
+            console.log('All fields should be filled');
+            err.innerHTML = 'phone number cannot be empty'
+        }      
+        else if(user_contact_number.length <10)  {
+            console.log('phone number must contain atleast 10 charecters');
+            err.innerHTML = 'phone number must contain atleast 10 charecters'
+        }    
+        
+        else {
+            err.innerHTML = ''
+            console.log('trying to log in with otp');
+            try_to_signin(user_contact_number);
+        }
+    }
+
+    function try_to_signin(user_contact_number){
+        $.ajaxSetup({
+            data:{csrfmiddlewaretoken :'{{ csrf_token }}'}
+        })
+        
+        $.ajax({
+            url:'user_otp_sign_in',
+            method:'POST',
+            data:{'phone_number':user_contact_number},
+            success:function(response){
+                console.log(response)
+                alert(user_contact_number)
+
+                resp = response['otp_sign_in_user_status']
+                if(resp == 'user_not_found'){
+                    console.log('user_not_found_error')
+                    err.innerHTML = 'Invalid Phone Number'
+                }
+                else if(resp == 'failed_to_send_otp'){
+                    console.log('failed_to_send_otp')
+                    err.innerHTML = 'Please make sure you have an internet connection'
+
+                }
+                else if(resp == 'success'){
+                    console.log('user_found')
+                    console.log('sending otp')
+                    console.log('Redirecting to the otp verification')
+                    err.innerHTML = ''
+                    window.location.href = '/user_otp_sign_in_validation'
+
+                }
+            },
+        })
+    }
+</script>
+
+{% endblock %}

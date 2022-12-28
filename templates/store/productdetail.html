@@ -208,40 +208,6 @@
 
 
 
-<script>
-    $(function() {
-        $('.addToCartBtn').submit(function(event) {
-            event.preventDefault();
-    
-            var product_id = $( '.prod_id').val();
-            var product_id = $( '.prod_id').val();
-            var token = $('input[name=csrfmiddlewaretoken]').val();
-            
-            $.ajax({
-                method: 'post',
-                url: "add_cart",
-                
-                data:{
-                    'product_id' : product_id
-                }
-                ,
-                success: function(response) {
-                    // Update the shopping cart display
-                    $('#cart-count').text(response.cart_count);
-                    $('#cart-total').text(response.cart_total);
-    
-                    // Show a success message
-                    alert('Item added to cart!');
-                },
-                error: function(response) {
-                    // Show an error message
-                    alert('An error occurred while adding the item to the cart.');
-                }
-            });
-        });
-    });
-    </script>
-   
     
     
     

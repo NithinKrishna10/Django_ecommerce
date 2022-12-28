@@ -19,7 +19,7 @@
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/3.1.3/cropper.min.css" /> -->
   <!-- Vendor CSS Files -->
   <link href="{% static 'customadmin/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'customadmin/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
@@ -272,77 +272,74 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/4.1.0/cropper.min.css">
     <!-- ============================================= -->
-    <script>
-      const alertBox = document.getElementById('alert-box')
-      const imageBox = document.getElementById('image-box')
-      const imageForm = document.getElementById('brand-form')
-      const confirmBtn = document.getElementById('confirm-btn')
-      const input = document.getElementById('id_brand_image')
-      const desc = document.getElementById('id_brand_description')
-      const bname = document.getElementById('id_brand_name')
-      
-      const csrf = document.getElementsByName('csrfmiddlewaretoken')
-       
-      input.addEventListener('change', ()=>{
-          alertBox.innerHTML = ""
-          confirmBtn.classList.remove('not-visible')
-          const img_data = input.files[0]
-          const url = URL.createObjectURL(img_data)
-       
-          imageBox.innerHTML = `<img src="${url}" id="image" width="700px">`
-          var $image = $('#brand_image')
-          console.log($image)
-       
-          $image.cropper({
-              aspectRatio: 16 / 9,
-              crop: function(event) {
-                  console.log(event.detail.x);
-                  console.log(event.detail.y);
-                  console.log(event.detail.width);
-                  console.log(event.detail.height);
-                  console.log(event.detail.rotate);
-                  console.log(event.detail.scaleX);
-                  console.log(event.detail.scaleY);
-              }
-          });
-           
-          var cropper = $image.data('cropper');
-          confirmBtn.addEventListener('click', ()=>{
-              cropper.getCroppedCanvas().toBlob((blob) => {
-                  console.log('confirmed')
-                  const fd = new BrandForm();
-                  fd.append('csrfmiddlewaretoken', csrf[0].value)
-                  fd.append('brand_image', blob, 'my-image.png',bname,desc);
-       
-                  $.ajax({
-                      type:'POST',
-                      url: imageForm.action,
-                      enctype: 'multipart/form-data',
-                      data: fd,
-                      success: function(response){
-                          console.log('success', response)
-                          alertBox.innerHTML = `<div class="alert alert-success" role="alert">
-                                                  Successfully saved and cropped the selected image
-                                              </div>`
-                      },
-                      error: function(error){
-                          console.log('error', error)
-                          alertBox.innerHTML = `<div class="alert alert-danger" role="alert">
-                                                  Ups...something went wrong
-                                              </div>`
-                      },
-                      cache: false,
-                      contentType: false,
-                      processData: false,
-                  })
-              })
-          })
-      })
-      </script>
- 
     
-  
+    <script>
+      $(function () {
 
+      /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
+      $("#id_image").change(function () {
+          if (this.files && this.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+              $("#image").attr("src", e.target.result);
+              $("#modalCrop").modal("show");
+          }
+          reader.readAsDataURL(this.files[0]);
+          }
+      });
+  
+      /* SCRIPTS TO HANDLE THE CROPPER BOX */
+      var $image = $("#image");
+      var cropBoxData;
+      var canvasData;
+      $("#modalCrop").on("shown.bs.modal", function () {
+          $image.cropper({
+          viewMode: 1,
+          aspectRatio: 1/1,
+          minCropBoxWidth: 200,
+          minCropBoxHeight: 200,
+          ready: function () {
+              $image.cropper("setCanvasData", canvasData);
+              $image.cropper("setCropBoxData", cropBoxData);
+          }
+          });
+      }).on("hidden.bs.modal", function () {
+          cropBoxData = $image.cropper("getCropBoxData");
+          canvasData = $image.cropper("getCanvasData");
+          $image.cropper("destroy");
+      });
+  
+      $(".js-zoom-in").click(function () {
+          $image.cropper("zoom", 0.1);
+      });
+  
+      $(".js-zoom-out").click(function () {
+          $image.cropper("zoom", -0.1);
+      });
+  
+      /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
+      $(".js-crop-and-upload").click(function () {
+          var cropData = $image.cropper("getData");
+          $("#id_x").val(cropData["x"]);
+          $("#id_y").val(cropData["y"]);
+          $("#id_height").val(cropData["height"]);
+          $("#id_width").val(cropData["width"]);
+          $("#formUpload").submit();
+      });
+  
+      });
+  </script>
+
+
+    <!-- ======================== -->
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/3.1.3/cropper.min.js"></script>
+
+    <!-- ============================= -->
+    <script src="{% static 'js/checkout.js' %}"></script>
+    <!-- ======================================== -->
 
     </body>
     
