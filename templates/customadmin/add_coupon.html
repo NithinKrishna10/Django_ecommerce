@@ -1,0 +1,71 @@
+{% extends 'customadmin/adminbase.html' %}
+{% load static %}
+
+  
+{% block content %}
+
+
+
+<section class="section container" style="margin-top: 5rem;">
+    <div class="row ">
+      <div class="" style="width: 70%; margin-left: 20%;">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Add Coupon Form </h5>
+
+            <!-- General Form Elements -->
+            <form action=""   method="POST">
+                {% csrf_token %}
+              <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label">Coupon</label>
+                <div class="col-sm-10">
+                    {{ cnform.coupon_code }}
+                </div>
+              </div>
+              
+               
+              <div class="row mb-3">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Discount</label>
+                <div class="col-sm-10">
+                    {{ cnform.discount_price}}
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Minimum Price</label>
+                <div class="col-sm-10">
+                    {{ cnform.minimum_amount }}
+
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputNumber" class="col-sm-2 col-form-label">Is Expired</label>
+                <div class="col-sm-10">
+                    {{ cnform.is_expired}}
+
+                </div>
+              </div>
+           
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Submit Button</label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Submit Form</button>
+                </div>
+              </div>
+
+            </form><!-- End General Form Elements -->
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+
+{% endblock %}

@@ -9,9 +9,9 @@
 
 <div style="display: flex;justify-content: center;align-items: center;height: 100%;width: 100vw;">
     <div
-        style="border:2px solid rgb(255, 255, 255);padding:50px;background-color: rgb(24, 13, 35);border-radius: 10px;color: rgb(10, 9, 9);box-shadow: 0px 20px 20px;">
+        style="border:2px solid rgb(255, 255, 255);padding:50px;background-color: rgb(180, 168, 192);border-radius: 10px;color: rgb(10, 9, 9);">
         <h3 style="color: white;margin: 0px;">Welcome using OTP</h3>
-        <p>Enter your registered phone number accociated with your Aldrich account</p>
+        <p>Enter your registered phone number </p>
         <div id="message"></div>
         <div style="margin-top: 10px;">
 
@@ -52,9 +52,7 @@
     }
 
     function try_to_signin(user_contact_number){
-        $.ajaxSetup({
-            data:{csrfmiddlewaretoken :'{{ csrf_token }}'}
-        })
+        $.ajaxSetup({ data:{csrfmiddlewaretoken :'{{ csrf_token }}'}})
         
         $.ajax({
             url:'user_otp_sign_in',
@@ -64,7 +62,7 @@
                 console.log(response)
                 alert(user_contact_number)
 
-                resp = response['otp_sign_in_user_status']
+                resp = response['status']
                 if(resp == 'user_not_found'){
                     console.log('user_not_found_error')
                     err.innerHTML = 'Invalid Phone Number'
@@ -79,7 +77,7 @@
                     console.log('sending otp')
                     console.log('Redirecting to the otp verification')
                     err.innerHTML = ''
-                    window.location.href = '/user_otp_sign_in_validation'
+                    window.location.href = '/accounts/user_otp_sign_in_validation'
 
                 }
             },

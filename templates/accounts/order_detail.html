@@ -9,6 +9,7 @@
     <div class="row invoice row-printable">
         <div class="col-md-12">
             <!-- col-lg-12 start here -->
+            <a href="{% url 'invoice_pdf_view' order.id%}" target="_blank"><button class="btn btn-primary">Download pdf</button></a>
             <div class="panel panel-default plain" id="dash_0">
                 <!-- Start .panel -->
                 <div class="panel-body p30">

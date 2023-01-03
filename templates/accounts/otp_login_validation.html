@@ -59,7 +59,7 @@
             data: { csrfmiddlewaretoken: '{{ csrf_token }}' }
         })
         $.ajax({
-            url: '/user_otp_sign_in_validation',
+            url: '/accounts/user_otp_sign_in_validation',
             method: 'post',
             data: { 'otp_1': otp_1, 'otp_2': otp_2, 'otp_3': otp_3, 'otp_4': otp_4},
             success: function (response) {
@@ -69,7 +69,7 @@
                 }
                 else if (resp == 'approved') {
                     console.log('redirecting to user home')
-                    window.location.href = '/user_home'
+                    window.location.href = '/'
                 }
             },
         })

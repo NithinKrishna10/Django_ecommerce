@@ -2,8 +2,10 @@
 from django import forms
 from accounts.models import Account
 from store.models import Product,Category,Brand,Variation
+from cart.models import Coupon
 from django.contrib.auth.models import User
 from PIL import Image
+from .models import Categoryoffer,Productoffer
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -61,3 +63,23 @@ class BrandForm(forms.ModelForm):
         resized_image.save(photo.image.path)
 
         return photo
+  
+  
+class CouponForm(forms.ModelForm):
+    
+    class Meta:
+        model = Coupon
+        fields = '__all__'
+    
+class ProductOfferForm(forms.ModelForm):
+    
+    class Meta:
+        model = Productoffer
+        fields = '__all__'
+        
+
+class CategoryOfferForm(forms.ModelForm):
+    
+    class Meta:
+        model = Categoryoffer
+        fields = '__all__'

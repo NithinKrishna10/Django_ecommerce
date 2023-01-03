@@ -127,4 +127,9 @@ class OrderProducts(models.Model):
     def __str__(self):
         return self.product.product_name
     
-    
+class Product_Return(models.Model):
+    order_num =models.CharField(max_length=100)
+    user = models.ForeignKey(Account,on_delete = models.CASCADE)
+    reason = models.CharField(max_length = 500)
+
+

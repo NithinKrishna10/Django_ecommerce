@@ -3,35 +3,23 @@ from django.shortcuts import redirect, render
 
 from cart.models import CartItem
 
-from .models import Product,Category
-
+from .models import Product,Category,Gender,Brand
+from django.db.models import Q
 # Create your views here.
 
-# def product_detail(request, id, product_slug):
-   
-# #    if(Category.objects.filter(slug=category_slug, status=0)):
-# #        if(Product.objects.filter(slug=product_slug , status=0)):
-# #            products =Product.objects.filter(slug=product_slug, status=0).first
-# #            context={ 'products': products }
-# #        else:
-# #            message.error(request, "no")
-# #            return redirect('home')
-
-
-#     product = Product.objects.get(pk=id)  
-#     context={
-#         'product': product
-#     }
-#     return render(request, 'store/productdetail.html', context)
 
 def store_view(request):
     products = Product.objects.all().filter(is_available=True).order_by('created_date')
     cate = Category.objects.all()
+    gender = Gender.objects.all()
+    brand = Brand.objects.all()
         # Get the reviews
 
     context = {
+        'brand': brand,
         'products': products,
         'cate' : cate,
+        'gender' : gender,
     }
     
     return render(request, 'store/storev.html', context)
@@ -43,7 +31,7 @@ def product_detail(request, category_slug, product_slug, product_id):
         single_product = Product.objects.get(category__slug=category_slug, slug=product_slug)
         cartitem = CartItem.objects.filter(product=single_product).exists()
         print(cartitem)
-        # in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=single_product).exists()
+       
     except Exception as e:
         raise e
     
@@ -51,10 +39,36 @@ def product_detail(request, category_slug, product_slug, product_id):
     context = {
         'single_product': single_product,
         'cartitem': cartitem
-        # 'in_cart'       : in_cart,
-        # 'orderproduct': orderproduct,
-        # 'reviews': reviews,
-        # 'product_gallery': product_gallery,
+ 
     }
     return render(request, 'store/productdetail.html', context)
 
+def gender_view(request,gender_id):
+    
+        # gender_id = int(request.POST.get('gender_id'))
+    gen = Gender.objects.get(id = gender_id)
+    print(gen.gender)
+    products = Product.objects.all().filter(is_available=True,gender=gen).order_by('created_date')
+    cate = Category.objects.all()
+    gender = Gender.objects.all()
+            # Get the reviews
+
+    context = {
+            'products': products,
+            'cate' : cate,
+            'gender' : gender,
+        }
+    
+    return render(request, 'store/storev.html', context)
+
+def search(request):
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        if keyword:
+            products = Product.objects.order_by('-created_date').filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword) )
+            product_count = products.count()
+    context = {
+        'products': products,
+        'product_count': product_count,
+    }
+    return render(request, 'store/storev.html', context)

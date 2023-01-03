@@ -26,7 +26,73 @@
                     
                 </div>
                 <div class="row">
-                <div class="col-md-12 bg-dark">
+
+
+                    <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title mb-4">Billing Address</h4>
+                          <form action="{% url 'place_order' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-row">
+                              <div class="col form-group">
+                                <label for="">First Name</label>
+                                <input type="text" name="first_name" class="form-control" required>
+                              </div>
+                              <div class="col form-group">
+                                <label for="">Last Name</label>
+                                <input type="text" name="last_name" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="form-row">
+                              <div class="col form-group">
+                                <label for="">Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                              </div>
+                              <div class="col form-group">
+                                <label for="">Phone Number</label>
+                                <input type="text" name="phone" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="form-row">
+                              <div class="col form-group">
+                                <label for="">Address Line 1</label>
+                                <input type="text" name="address_line_1" class="form-control" required>
+                              </div>
+                              <div class="col form-group">
+                                <label for="">Address Line 2</label>
+                                <input type="text" name="address_line_2" class="form-control">
+                              </div>
+                              <div class="col form-group">
+                                <label for="">Pincode</label>
+                                <input type="text" name="pincode" class="form-control">
+                              </div>
+                            </div>
+                            <div class="form-row">
+                              <div class="col form-group">
+                                <label for="">City</label>
+                                <input type="text" name="city" class="form-control" required>
+                              </div>
+                              <div class="col form-group">
+                                <label for="">State</label>
+                                <input type="text" name="state" class="form-control" required>
+                              </div>
+                              <div class="col form-group">
+                                <label for="">Country</label>
+                                <input type="text" name="country" class="form-control" required>
+                              </div>
+                              
+                              </div>
+                              <div class="form-row">
+                                <label for="">Order Note</label>
+                                <textarea name="order_note" rows="2" class="form-control"></textarea>
+                              </div>
+                      
+                      
+                        </div>
+                        <input type="submit" value="Save" class="btn btn-primary">
+
+                    </div>
+                <!-- <div class="col-md-12 bg-dark">
                     <form action="{% url 'add_address' %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="form-row">
@@ -79,8 +145,7 @@
                         </div>
                       
                          
-                        </div>
-                        <input type="submit" value="Save" class="btn btn-primary">
+                        </div> -->
                     </form>
                 </div>
     

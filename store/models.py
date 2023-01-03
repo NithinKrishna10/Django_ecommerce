@@ -51,34 +51,6 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
-
-# class Size(models.Model):
-#     size_num = models.CharField(max_length=10)
-
-#     def __str__(self):
-#        return self.size_num
-
-
-# class Color(models.Model):
-#     color_name = models.CharField(max_length=15)
-
-# class ProductAttribute(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     sizes = models.ForeignKey(Size ,on_delete=models.CASCADE)
-#     colors = models.ForeignKey(Color, null=True, blank=True,on_delete=models.CASCADE)
-#     quantinty= models.IntegerField(default=0)
-
-#     # def __str__(self):
-#     #     return self.product
-#     def img(self):
-#         imag =  Product.objects.get(id= self.product)
-
-        # if imag is not None:
-        #      varimage=imag.images.url
-        # else:
-        #     varimage=""
-        # return varimage
-
 class VariationManager(models.Manager):
     def colors(self):
         return super(VariationManager, self).filter(variation_category='color', is_active=True)

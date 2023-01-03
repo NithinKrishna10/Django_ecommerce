@@ -4,6 +4,15 @@ from accounts.models import Account
 from store.models import Product,Variation
 
 # Create your models here.
+class Coupon(models.Model):
+    coupon_code  = models.CharField(max_length=10)
+    is_expired = models.BooleanField(default=False)
+    discount_price = models.IntegerField(default=100)
+    minimum_amount = models.IntegerField(default=500)
+
+    def __str__(self):
+        return self.coupon_code
+                           
 
 
 class Cart(models.Model):
@@ -19,6 +28,7 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     variations = models.ManyToManyField(Variation, blank=True)
     cart    = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL , null =True,blank=True)
     quantity = models.IntegerField()
     is_active = models.BooleanField(default=True)
 
@@ -27,3 +37,5 @@ class CartItem(models.Model):
 
     def __unicode__(self):
         return self.product
+
+

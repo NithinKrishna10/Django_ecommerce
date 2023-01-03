@@ -50,7 +50,7 @@ class Account(AbstractBaseUser):
     last_name       = models.CharField(max_length=50)
     username        = models.CharField(max_length=50, unique=True)
     email           = models.EmailField(max_length=100, unique=True)
-    phone_number    = models.CharField(max_length=50)
+    phone_number    = models.CharField(max_length=50,unique=True)
 
     # required
     date_joined     = models.DateTimeField(auto_now_add=True)
@@ -107,3 +107,13 @@ class Address(models.Model):
     country = models.CharField(max_length=255)
     pincode = models.CharField(max_length=255)
     phone = models.CharField(max_length=15,default=0)
+    
+    def __str__(self):
+        return self.user.first_name
+
+
+class Return_request(models.Model):
+    user = models.ForeignKey(Account,on_delete = models.CASCADE)
+    order_number = models.CharField(max_length=15,default=1)
+    reason = models.CharField(max_length = 500)
+    

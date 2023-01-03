@@ -40,5 +40,20 @@ urlpatterns = [
     path('orderdetail/<int:order_id>/', views.orderdetail, name='orderdetail'),
     path('productsorderd/', views.productsorderd, name='productsorderd'),
     path('adminOrderUpdate/<int:order_id>/',views.adminOrderUpdate,name='adminOrderUpdate'),
+    path('returnUpdate/<int:order_id>/',views.returnUpdate,name='returnUpdate'),
+    
+    # =================================== Coupon & Offer ===================================
+    path('coupon_mange',views.coupon_mange,name='coupon_mange'),
+    path('add_coupon',views.add_coupon,name='add_coupon'),
+    
+    path('offer_category', views.offer_category,name='offer_category'),
+    path('offer_product', views.offer_product,name='offer_product'),
+    
+    
+    # ==================================== Sales Report ======================================
+    path('sales',views.sales_report_date, name='sales'),
+    path('export_to_pdf',views.export_to_pdf, name='export_to_pdf'),
+    path('export_to_excel',views.export_to_excel, name='export_to_excel'),
+    
 ]
 

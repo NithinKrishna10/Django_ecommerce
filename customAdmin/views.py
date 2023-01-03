@@ -4,14 +4,22 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
-from accounts.models import Account
-from orders.models import Order, OrderProduct,Orders
-from .forms import CategoryForm, ProductForm, UserForm, VariationsForm,BrandForm
+
+from django.template.loader import *
+from django.db.models import Count,Sum
+from .models import SalesReport,sales_report,monthly_sales_report,Categoryoffer,Productoffer
+from accounts.models import Account,Return_request
+from orders.models import Order, OrderProducts,Orders
+from .forms import  ProductForm, UserForm, VariationsForm,BrandForm,CategoryOfferForm,CategoryForm,CouponForm
 from store.models import Product, Category, Variation,Brand
+from cart.models import Coupon
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 import datetime
 from datetime import date, timedelta
+import io
+from xhtml2pdf import pisa 
+import xlwt
 
 # Create your views here.
 
@@ -52,15 +60,15 @@ def admin_login(request):
 
 
 
-   
+@login_required(login_url='admin_login') 
 def dasshboard(request):
     if request.user.is_authenticated:
         
-        orderitem = OrderProduct.objects.all()
+        orderitem = OrderProducts.objects.all()
         labels = []
         data = []
         
-        queryset = OrderProduct.objects.order_by('quantity')
+        queryset = OrderProducts.objects.order_by('quantity')
         for city in queryset:
             labels.append(city.product)
             data.append(city.quantity)
@@ -90,7 +98,7 @@ def dasshboard(request):
     else:
         return redirect('admin_login')
 
-
+@login_required(login_url='admin_login')
 def user_management(request):
 
     if request.user.is_authenticated:
@@ -102,7 +110,7 @@ def user_management(request):
     else:
         return redirect('admin_login')
 
-
+@login_required(login_url='admin_login')
 def edit_user(request, pk):
     user = Account.objects.get(id=pk)
     uform = UserForm(instance=user)
@@ -118,7 +126,7 @@ def edit_user(request, pk):
     }
     return render(request, 'customadmin/useredit.html', context)
 
-
+@login_required(login_url='admin_login')
 def block_user(request, pk):
     user = Account.objects.get(id=pk)
     if request.method == 'POST':
@@ -136,7 +144,7 @@ def block_user(request, pk):
 
 # ========================================== Admin Product Functions ========================================== #
 
-
+@login_required(login_url='admin_login')
 def product(request):
     if request.user.is_authenticated:
 
@@ -146,7 +154,7 @@ def product(request):
     else:
         return redirect('admin_login')
 
-
+@login_required(login_url='admin_login')
 def add_products(request):
     print('hoii')
     if request.method == 'POST':
@@ -167,7 +175,7 @@ def add_products(request):
     }
     return render(request, 'customadmin/addproduct.html', context)
 
-
+@login_required(login_url='admin_login')
 def edit_product(request, pk):
     product = Product.objects.get(id=pk)
     pform = ProductForm(instance=product)
@@ -184,7 +192,7 @@ def edit_product(request, pk):
     }
     return render(request, 'customadmin/editproduct.html', context)
 
-
+@login_required(login_url='admin_login')
 def variations(request):
 
     productv = Variation.objects.all()
@@ -196,7 +204,7 @@ def variations(request):
 
     return render(request, 'customadmin/productvariant.html', context)
 
-
+@login_required(login_url='admin_login')
 def addVariations(request):
 
     if request.user.is_authenticated:
@@ -215,7 +223,7 @@ def addVariations(request):
     else:
         return redirect('variations')
 
-
+@login_required(login_url='admin_login')
 def blockVariant(request, pk):
     variant = Variation.objects.get(id=pk)
     if request.method == 'POST':
@@ -230,7 +238,7 @@ def blockVariant(request, pk):
 
         return redirect('variations')
 
-
+@login_required(login_url='admin_login')
 def deleteVariant(request, pk):
 
     variants = Variation.objects.get(id=pk)
@@ -238,11 +246,14 @@ def deleteVariant(request, pk):
         variants.delete()
 
         return redirect('variations')
-
+    
+@login_required(login_url='admin_login')
 def brands(request):
     brand = Brand.objects.all()
     
     return render(request,'customadmin/brand.html',{ 'brand':brand })
+
+@login_required(login_url='admin_login')
 def addbrand(request):
 
     if request.method == 'POST':
@@ -268,14 +279,14 @@ def addbrand(request):
     return render(request, 'customadmin/addbrand.html',context)
 
 # ========================================== Admin Category Functions ========================================== #
-
+@login_required(login_url='admin_login')
 def category(request):
 
     category = Category.objects.all()
 
     return render(request, 'customadmin/category.html', {'category': category})
 
-
+@login_required(login_url='admin_login')
 def add_category(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -293,7 +304,7 @@ def add_category(request):
     else:
         return redirect('admin_login')
 
-
+@login_required(login_url='admin_login')
 def edit_category(request, pk):
     cate = Category.objects.get(id=pk)
     cform = CategoryForm(instance=cate)
@@ -309,7 +320,7 @@ def edit_category(request, pk):
     }
     return render(request, 'customadmin/editcategory.html', context)
 
-
+@login_required(login_url='admin_login')
 def del_category(request, pk):
 
     cate = Category.objects.get(id=pk)
@@ -318,7 +329,7 @@ def del_category(request, pk):
 
         return redirect('category')
 
-
+@login_required(login_url='admin_login')
 def adminlogout(request):
     auth.logout(request)
     messages.success(request, 'You are logged out.')
@@ -329,15 +340,17 @@ def adminlogout(request):
 
 
 
-@login_required(login_url='login')
+@login_required(login_url='admin_login')
 def orders(request):
     orders = Orders.objects.all().order_by('-created_at')
+    return_order = Return_request.objects.all()
     context = {
         'orders': orders,
+        'return_order' : return_order
     }
     return render(request, 'customadmin/ordermanage.html', context)
 
-@login_required(login_url='login')
+@login_required(login_url='admin_login')
 def cancelorder(request, order_id):
     order = Orders.objects.get(id=order_id)
     if request.method == 'POST':
@@ -346,12 +359,22 @@ def cancelorder(request, order_id):
 
     return redirect('orders')
 
+@login_required(login_url='admin_login')
+def returnUpdate(request, order_id):
+    order = Orders.objects.get(id=order_id)
+    if request.method == 'POST':
+        order.status = 'Return Accepted'
+        order.save()
 
+    return redirect('orders')
+
+
+@login_required(login_url='admin_login')
 def orderdetail(request, order_id):
 
     order = Orders.objects.get(id=order_id)
     # num = order.order_number
-    orderdetail = OrderProduct.objects.filter(order_number=order.order_number)
+    orderdetail = OrderProducts.objects.filter(order_number=order.order_number)
     subtotal = 0
 
     for i in orderdetail:
@@ -364,11 +387,10 @@ def orderdetail(request, order_id):
     }
     return render(request, 'customadmin/aorderdetail.html', context)
 
-
-@login_required(login_url='login')
+@login_required(login_url='admin_login')
 def productsorderd(request):
 
-    orderitems = OrderProduct.objects.all()
+    orderitems = OrderProducts.objects.all()
     # orders = Order.objects.filter(user=request.user)
 
     context = {
@@ -379,6 +401,7 @@ def productsorderd(request):
     return render(request, 'customadmin/orderd_products.html', context)
 
 
+@login_required(login_url='admin_login')
 def adminOrderUpdate(request, order_id):
     order = Orders.objects.get(id=order_id)
     if request.method == 'POST':
@@ -422,7 +445,7 @@ def adminOrderUpdate(request, order_id):
 
 current_date = datetime.date.today()
 duration = 'Today'
-
+@login_required(login_url='admin_login')
 def dashboard(request):
     admin = ''
     # if 'admin' in request.session:
@@ -578,5 +601,289 @@ def dashboard(request):
         'razorpay_payment_method_graph_data': razorpay_payment_method_graph_data,
         'cod_payment_method_graph_data': cod_payment_method_graph_data,
     })
+
+
+
+    
+# ========================== Coupon ==========================
+@login_required(login_url='admin_login')
+def coupon_mange(request):
+    
+    coupon = Coupon.objects.all()
     
     
+    return render(request,'customadmin/coupenManage.html',{'coupon': coupon})
+@login_required(login_url='admin_login')
+def add_coupon(request):
+    
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            cnform = CouponForm(request.POST, request.FILES)
+
+            print(cnform.errors)
+            if cnform.is_valid():
+                cnform.save()
+            return redirect('coupon_mange')
+        cnform = CouponForm()
+        context = {
+            'cnform': cnform
+        }
+        return render(request, 'customadmin/add_coupon.html', context)
+    else:
+        return redirect('admin_login')
+
+
+def offer_product(request):
+    
+    pro_offer = Productoffer.objects.all()
+    
+    
+    return render(request,'customadmin/product_offer.html',{'pro_offer': pro_offer})   
+    
+
+
+def offer_category(request):
+    
+    cat_offer = Categoryoffer.objects.all()
+    
+    
+    return render(request,'customadmin/category_offer.html',{'cat_offer': cat_offer})   
+    
+
+
+# ===================================== Sales Report =================================
+
+@login_required(login_url='admin_login')
+def sales_report_date(request):
+    data = OrderProducts.objects.all()
+    if request.method == 'POST':
+        if request.POST.get('month'):
+            month = request.POST.get('month')
+            print(month)
+            data = OrderProducts.objects.filter(created_at__icontains=month)
+            
+            if data:
+                if SalesReport.objects.all():
+                    SalesReport.objects.all().delete()
+                    for i in data:
+                        sales = SalesReport()
+                        sales.productName = i.product.product_name
+                        sales.categoryName = i.product.category.category_name
+                        sales.date = i.created_at
+                        sales.quantity = i.quantity
+                        sales.productPrice = i.product_price
+                        sales.save()
+                    sales = SalesReport.objects.all()
+                    total = SalesReport.objects.all().aggregate(Sum('productPrice'))
+                    context = { 'sales':sales,'total':total['productPrice__sum']}
+                    return render(request,'customadmin/sales_report_.html',context)
+                else:
+                    for i in data:
+                        sales = SalesReport()
+                        sales.productName = i.product.product_name
+                        sales.categoryName = i.product.category.category_name
+                        sales.date = i.created_at
+                        sales.quantity = i.quantity
+                        sales.productPrice = i.product_price
+                        sales.save()
+                    sales = SalesReport.objects.all()
+                    total = SalesReport.objects.all().aggregate(Sum('productPrice'))
+                    context = { 'sales':sales,'total':total['productPrice__sum']}
+                    return render(request,'customadmin/sales_report_.html',context)
+            else:
+                messages.warning(request,"Nothing Found!!")
+        if request.POST.get('date'):
+            date = request.POST.get('date')
+            print("0,",date)
+            
+            date_check = OrderProducts.objects.filter(created_at__icontains=date)
+            print(date_check)
+            if date_check:
+                if SalesReport.objects.all():
+                    SalesReport.objects.all().delete()
+            
+                    for i in date_check:
+                        sales = SalesReport()
+                        sales.productName = i.product.product_name
+                        sales.categoryName = i.product.category.category_name
+                        sales.date = i.created_at
+                        sales.quantity = i.quantity
+                        sales.productPrice = i.product_price
+                        sales.save()
+                    sales = SalesReport.objects.all()
+                    total = SalesReport.objects.all().aggregate(Sum('productPrice'))
+                    context = { 'sales':sales,'total':total['productPrice__sum']}
+                    return render(request,'customadmin/sales_report_.html',context)
+                else:
+                    for i in date_check:
+                        sales = SalesReport()
+                        sales.productName = i.product.product_name
+                        sales.categoryName = i.product.category.category_name
+                        sales.date = i.created_at
+                        sales.quantity = i.quantity
+                        sales.productPrice = i.product_price
+                        sales.save()
+                    sales = SalesReport.objects.all()
+                    total = SalesReport.objects.all().aggregate(Sum('productPrice'))
+                    context = { 'sales':sales,'total':total['productPrice__sum']}
+                    return render(request,'customadmin/sales_report_.html',context)
+            else:
+                messages.warning(request,"Nothing Found!!")
+        if request.POST.get('date1'):
+            date1 = request.POST.get('date1')
+            date2 = request.POST.get('date2')
+            data_range = OrderProducts.objects.filter(created_at__gte=date1,created_at__lte=date2)
+            if data_range:
+                if SalesReport.objects.all():
+                    SalesReport.objects.all().delete()
+            
+                    for i in data_range:
+                        sales = SalesReport()
+                        sales.productName = i.product.product_name
+                        sales.categoryName = i.product.category.category_name
+                        sales.date = i.created_at
+                        sales.quantity = i.quantity
+                        sales.productPrice = i.product_price
+                        sales.save()
+                    sales = SalesReport.objects.all()
+                    total = SalesReport.objects.all().aggregate(Sum('productPrice'))
+                    context = { 'sales':sales,'total':total['productPrice__sum']}
+                    return render(request,'customadmin/sales_report_.html',context)
+                else:
+                    for i in data_range:
+                        sales = SalesReport()
+                        sales.productName = i.product.product_name
+                        sales.categoryName = i.product.category.category_name
+                        sales.date = i.created_at
+                        sales.quantity = i.quantity
+                        sales.productPrice = i.product_price
+                        sales.save()
+                    sales = SalesReport.objects.all()
+                    total = SalesReport.objects.all().aggregate(Sum('productPrice'))
+                    context = { 'sales':sales,'total':total['productPrice__sum']}
+                    return render(request,'customadmin/sales_report_.html',context)
+            else:
+                messages.warning(request,"Nothing Found!!")
+    if data:
+        if SalesReport.objects.all():
+            SalesReport.objects.all().delete()
+            for i in data:
+                sales = SalesReport()
+                sales.productName = i.product.product_name
+                sales.categoryName = i.product.category.category_name
+                sales.date = i.created_at
+                sales.quantity = i.quantity
+                sales.productPrice = i.product_price
+                sales.save()
+            sales = SalesReport.objects.all()
+            total = SalesReport.objects.all().aggregate(Sum('productPrice'))
+            context = { 'sales':sales,'total':total['productPrice__sum']}
+            return render(request,'customadmin/sales_report_.html',context)
+
+        else:
+            for i in data:
+                sales = SalesReport()
+                sales.productName = i.product.product_name
+                sales.categoryName = i.product.category.category_name
+                sales.date = i.created_at
+                sales.quantity = i.quantity
+                sales.productPrice = i.product_price
+                sales.save()
+            sales = SalesReport.objects.all()
+            total = SalesReport.objects.all().aggregate(Sum('productPrice'))
+            context = { 'sales':sales,'total':total['productPrice__sum']}
+            return render(request,'customadmin/sales_report_.html',context)
+        
+    else:
+        messages.warning(request,"Nothing Found!!")
+    
+    return render(request,'customadmin/sales_report_.html')
+
+
+@login_required(login_url='admin_login')
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = io.BytesIO()
+    pdf = pisa.pisaDocument(io.BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return
+
+@login_required(login_url='admin_login')
+def export_to_excel(request):
+    response = HttpResponse(content_type = 'application/ms-excel')
+    response['content-Disposition'] = 'attachment; filename="sales.xls"'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Sales Report') #this will generate a file named as sales Report
+
+     # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Product Name','Category','Price','Quantity', ]
+
+    for col_num in range(len(columns)):
+        # at 0 row 0 column
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    
+    font_style = xlwt.XFStyle()
+    total = 0
+
+    rows = SalesReport.objects.values_list(
+        'productName','categoryName', 'productPrice', 'quantity')
+    for row in rows:
+        total +=row[2]
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+    row_num += 1
+    col_num +=1
+    ws.write(row_num,col_num,total,font_style)
+
+    wb.save(response)
+
+    return response
+
+# @never_cache
+@login_required(login_url='admin_login')
+def export_to_pdf(request):
+    prod = Product.objects.all()
+    order_count = []
+    # for i in prod:
+    #     count = SalesReport.objects.filter(product_id=i.id).count()
+    #     order_count.append(count)
+    #     total_sales = i.price*count
+    sales = SalesReport.objects.all()
+    total_sales = SalesReport.objects.all().aggregate(Sum('productPrice'))
+
+
+
+    template_path = 'customadmin/sales_pdf.html'
+    context = {
+        'brand_name':prod,
+        'order_count':sales,
+        'total_amount':total_sales['productPrice__sum'],
+    }
+    
+    # csv file can also be generated using content_type='application/csv
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+        html, dest=response)
+    # if error then show some funny view
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+
+    return response
+
+
+

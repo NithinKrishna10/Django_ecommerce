@@ -6,7 +6,7 @@ from django.conf import settings
 
 def send_message():
     try:
-        account_sid = 'SK89ceeec6846fa2465b0fd994cf12dc95'
+        account_sid = 'AC1cb3556b8da7c50552bfa5acbe8136c0'
         auth_token = 'e08a6c38c2e9815753a5c3b8fd142442'
         client = Client(account_sid, auth_token)
         message = client.messages.create(

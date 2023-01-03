@@ -17,5 +17,12 @@ urlpatterns = [
     path('user_otp_sign_in', views.user_otp_sign_in,name="otp"),
     path('user_otp_sign_in_validation', views.user_otp_sign_in_validation),
     path('cancelOrder', views.cancelOrder, name='cancelOrder'),
-    path('address_manage',views.address_manage,name='address_manage')
+    path('address_manage',views.address_manage,name='address_manage'),
+    path('user_otp_sign_in', views.user_otp_sign_in,name="otp"),
+    path('smslogin/',views.sms_login,name='smslogin'),
+    path('otplogin/',views.otp_login,name='otplogin'),
+    path('pdf/<pk>',views.invoice_render_pdf_view, name='invoice_pdf_view'),
+    path('return_order/<str:order_id>', views.return_order,name='return_order'),
+
+  
 ]

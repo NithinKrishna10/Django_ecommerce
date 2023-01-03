@@ -1,0 +1,30 @@
+{% extends 'indexhome.html' %}
+{% block content %}
+<br>
+<br>
+
+<div class="row" style="margin-top: 5rem;">
+   
+    <div class="container">
+    <center>
+    <form action="{% url 'otplogin' %}" method='POST' autocomplete='off'>
+      {% csrf_token %}
+
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+          <input type="number" name="otp" class="form-control" required/>
+          <label class="form-label" for="form2Example1">OTP</label>
+        </div>
+      <br>
+        <button type="submit" class="btn btn-primary btn-block mb-4">Submit</button><br
+        <label style="color:red">{{message}}</label>
+      
+        <!-- Register buttons -->
+        <div class="text-center">
+          <p>Sign in with : <a href="/resendotp/">Resend OTP</a></p>
+          
+        </div>
+      </form>
+</div>
+
+{% endblock %}

@@ -1,7 +1,45 @@
 
 $(document).ready(function () {
 
-
+ $('#cancel-btn').click(function (e) { 
+    e.preventDefault();
+    console.log("hai Hallo")
+    swal({
+		title: "Are you sure?",
+		text: "Once deleted, you will not be able to recover this imaginary file!",
+		icon: "warning",
+		buttons: true,
+		dangerMode: true,
+	  })
+	  .then((willDelete) => {
+		if (willDelete) {
+			var order_id = ('.can').val();
+			var token = $("[name='csrfmiddlewaretoken']").val();
+			$.ajax({
+			
+				method: 'POST',
+				
+				url: '/accounts=/cancelOrderS',
+			   
+			   // data: data,
+				data: {  'order_id': order_id,  csrfmiddlewaretoken : token, },
+			   
+				success: function (response) {
+				   
+						console.log(response+'order placed successfully')
+						window.location.href = '/my_orders'
+				  
+				}
+			})
+		  swal("Poof! Your imaginary file has been deleted!", {
+			icon: "success",
+		  });
+		} else {
+		  swal("Your imaginary file is safe!");
+		}
+	  });
+    
+ });
 
 
     
@@ -82,8 +120,6 @@ $(document).ready(function () {
         });
 
 });
-
-
 
 
 function myFunction() {

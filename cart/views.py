@@ -194,30 +194,53 @@ def remove_cart_item(request, product_id, cart_item_id):
 
 
 def cart(request, total=0, quantity=0, cart_items=None):
+    
+  
+    
     try:
         tax = 0
         grand_total = 0
         if request.user.is_authenticated:
-            userpro =UserProfile.objects.filter(
-                user=request.user)
-            addresses =Address.objects.filter(
-                user=request.user)
             cart_items = CartItem.objects.filter(
                 user=request.user, is_active=True)
+            
+            
+           
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+            
         for cart_item in cart_items:
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
-        tax = (2 * total)/100
-        grand_total = total + tax
+        tax = (5 * total)/100
+        
+        grand_total = total + tax 
     except ObjectDoesNotExist:
         pass  # just ignore
+    
+    if request.method == 'POST':
+        coupon = request.POST.get('coupon')
+        coupon_obj = Coupon.objects.get(coupon_code =coupon)
+        
+        if not coupon_obj:
+          
+            
+            messages.warning(request , "Your account")
+            return redirect('cart')
+        else:
+            cart_item.coupon = coupon_obj
+            grand_total = grand_total - cart_item.coupon.discount_price
+            print(cart_item.coupon)
+            cart_item.save()
+            code = cart_item.coupon.coupon_code
+            # discount = cart_item.coupon.discount_price
+            # print(code)
 
+          
     context = {
-        'addresses' : addresses,
-        'userpro' : userpro,
+        # 'discount' : discount,
+        # 'code' : code,
         'total': total,
         'quantity': quantity,
         'cart_items': cart_items,
@@ -226,9 +249,10 @@ def cart(request, total=0, quantity=0, cart_items=None):
     }
     return render(request, 'store/cart.html', context)
 
+    
 
-@login_required(login_url='login')
 def checkout(request, total=0, quantity=0, cart_items=None):
+    addresses = [0,0]
     try:
         tax = 0
         grand_total = 0
@@ -239,6 +263,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
                 user=request.user)
             cart_items = CartItem.objects.filter(
                 user=request.user, is_active=True)
+         
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
@@ -246,13 +271,19 @@ def checkout(request, total=0, quantity=0, cart_items=None):
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
         tax = (5 * total)/100
-        grand_total = total + tax
+        grand_total = total + tax 
+        print(grand_total)
+        # grand_total = grand_total - cart_item.coupon.discount_price
+        
+
+       
     except ObjectDoesNotExist:
         pass
     
     context = {
+        
         'addresses' : addresses,
-        'userpro' : userpro,
+        
         'total': total,
         'quantity': quantity,
         'cart_items': cart_items,
@@ -264,15 +295,6 @@ def checkout(request, total=0, quantity=0, cart_items=None):
 
 def updatecart(request):
     
-    # if request.method == 'POST':
-    #     prod_id = int(request.POST.get('product_id'))
-    #     if(CartItem.objects.filter(user=request.user,product_id=prod_id)):
-    #         prod_qty = int(request.POST.get('product_qty'))
-    #         cart = CartItem.objects.get(product_id=prod_id, user=request.user)
-    #         cart.quantity = prod_qty
-    #         cart.save()
-    #         return JsonResponse({'status': "Update success"})
-    # return redirect('/')
     
     user = 'guest'
     if 'user' in request.session:

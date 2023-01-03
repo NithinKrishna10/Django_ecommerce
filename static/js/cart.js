@@ -11,7 +11,6 @@ $(document).ready(function () {
 
     
 
-
     $(function () {
         $('.changeQuantity').submit(function (event) {
             event.preventDefault();

@@ -50,16 +50,6 @@
                                     </figcaption>
                                 </td>
            
-<!--=================================================================  -->
-<!-- <td class="column-3">
-<div class="cart-product-quantity"
-style="display:flex;color: rgb(52, 50, 50);align-items: center;border:1px solid rgb(170, 161, 161);border-radius: 10px; ">
-<div onclick="quantity_minus('{{cart_item.id}}')" class="update">-</div>
-<p id="{{cart_item.id}}q" class="quantity">{{cart_item.quantity}}</p>
-<div onclick="quantity_plus('{{cart_item.id}}')" class="update">+</div>
-</div>
-</td> -->
-<!-- =========================================================== -->
 
                                 <td class="column-3">
                                     
@@ -80,7 +70,6 @@ style="display:flex;color: rgb(52, 50, 50);align-items: center;border:1px solid 
                                 <!-- <td class="column-5"></td> -->
 
                                 
-
                             </tr>
                         </div>
                       {% endfor %}
@@ -89,16 +78,29 @@ style="display:flex;color: rgb(52, 50, 50);align-items: center;border:1px solid 
                     </div>
 
                     <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+                        {% if cart_items.coupon == None %}
                         <div class="flex-w flex-m m-r-20 m-tb-5">
+                    <button  class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5">{{code}}</button>
+                            <!-- <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="{{code}}"> -->
+                                
+                            <div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
+                               <button type="submit">Coupon Applied</button> 
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="flex-w flex-m m-r-20 m-tb-5">
+                            <form action="{% url 'cart' %}" method="POST" style="display: flex;">
+                            {% csrf_token %}
                             <input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon Code">
                                 
                             <div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
-                                Apply coupon
+                               <button type="submit">Apply coupon</button> 
                             </div>
                         </div>
-
+                        </form>
+                       {% endif %}
                         <div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
-                            Update Cart
+                            Remove Coupon
                         </div>
                     </div>
                 </div>
@@ -118,6 +120,12 @@ style="display:flex;color: rgb(52, 50, 50);align-items: center;border:1px solid 
                               <dt>Tax:</dt>
                               <dd class="text-right"> ₹ {{tax}}</dd>
                             </dl>
+                           
+                            <dl class="dlist-align">
+                                <dt>Coupon Discount:</dt>
+                                <dd class="text-right">₹{{discount}}</dd>
+                              </dl>
+                            
                             <dl class="dlist-align">
                               <dt>Grand Total:</dt>
                               <dd class="text-right text-dark b"><strong>₹ {{grand_total}}</strong></dd>
@@ -145,6 +153,45 @@ style="display:flex;color: rgb(52, 50, 50);align-items: center;border:1px solid 
 </section>
     
 
+<script>
+   
+    function apply_coupon() {
+        document.getElementById('discount').style.display = 'none'
+        coupon = document.getElementById('coupon').value
+        $.ajaxSetup({
+            data: { csrfmiddlewaretoken: '{{csrf_token}}' },
+        });
+        $.ajax({
+            url: '/user_validate_coupon',
+            method: 'post',
+            data: { 'coupon': coupon },
+            success: function (response) {
+                if (response['status'] == 'success') {
+                    document.getElementById('message').innerText = ''
+                    document.getElementById('update_discount').innerText = response['discount']
+                    document.getElementById('update_discount_total').innerText = response['discount']
+                    console.log('you have applied the coupon (from ajax)')
+                    document.getElementById('discount').style.display = 'none'
+                }
+                else if (response['status'] == 'failed') {
+                    console.log('wrong coupon')
+                    alert('wrong coupon')
+                    document.getElementById('message').innerText = ' wrong coupon '
+                }
+                else if (response['status'] == 'used') {
+                    console.log('used coupon')
+                    alert('used coupon')
+                    document.getElementById('message').innerText = ' you can only use this coupon once. '
+                }
+            }
+        })
+        console.log(coupon)
+    }
+    function address_change(address_id) {
+        choose_address_id = address_id
+        // console.log(choose_address_id)
+    }
+</script>
 
 <script>
 

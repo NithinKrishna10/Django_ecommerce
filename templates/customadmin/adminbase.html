@@ -101,7 +101,7 @@
       <!-- ==================================================================================== -->
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Product Managment</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bx bxl-shopify"></i><span>Product Managment</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
@@ -133,7 +133,7 @@
       <!-- ==================================================================================== -->
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Category Managment</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bx bxs-cart"></i><span>Category Managment</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
@@ -151,8 +151,27 @@
       </li>
 
       <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-tags-fill"></i><span>Offer Managment</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="{% url 'offer_product' %}">
+              <i class="bi bi-circle"></i><span>Product Offer</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'offer_category' %}">
+              <i class="bi bi-circle"></i><span>Category Offer</span>
+            </a>
+          </li>
+         
+        </ul>
+      </li>
+
+      <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'brands' %}">
-          <i class="bi bi-box-arrow-in-right"></i>
+          <i class="bx bxs-badge-check"></i>
           <span>Brand</span>
         </a>
       </li>
@@ -173,7 +192,21 @@
         </a>
       </li><!-- End Profile Page Nav -->
 
-    
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'coupon_mange' %}">
+          <i class="bx bxs-certification"></i>
+          <span> Coupon Manage </span>
+        </a>
+      </li><!-- End Profile Page Nav -->
+
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'sales' %}">
+          <i class="bi bi-tag"></i>
+          <span> Sales </span>
+        </a>
+      </li>
+
       <li class="nav-item">
         <a class="nav-link collapsed" href="{% url 'adminlogout' %}">
           <i class="bi bi-box-arrow-in-right"></i>
