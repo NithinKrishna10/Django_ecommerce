@@ -21,7 +21,7 @@ import io
 from xhtml2pdf import pisa 
 import xlwt
 from django.http import FileResponse
-from docx import Document
+
 
 # Create your views here.
 
