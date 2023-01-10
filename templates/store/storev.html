@@ -39,7 +39,7 @@
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
-						All Products
+						<a href="{% url 'store_view' %}"> All Products</a>
 					</button>
 					{% for gen in gender %}
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
@@ -47,21 +47,7 @@
 					</button>
 					{% endfor %}
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-						Men
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-						Bag
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-						Shoes
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-						Watches
-					</button>
+					
 				</div>
 
 				<div class="flex-w flex-c-m m-tb-10">
@@ -98,11 +84,13 @@
 							</div>
 
 							<ul>
+								{% for br in brand %}
 								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										Default
+									<a href="{% url 'brand_view' br.id %}" class="filter-link stext-106 trans-04">
+										{{br.brand_name}}
 									</a>
 								</li>
+								{% endfor %}
 
 						
 							</ul>
@@ -114,6 +102,7 @@
 							</div>
 
 							<ul>
+							
 								<li class="p-b-6">
 									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
 										All
@@ -190,7 +179,7 @@
 
 			<div class="row isotope-grid">
 
-				{% for product in products %}
+				{% for product in page_obj.object_list  %}
 				<div class="col-4 col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
 					<!-- Block2 -->
 					<div class="block2">
@@ -208,8 +197,10 @@
 									{{ product.brand }}
 								</a>
 
-								<span class="stext-105 cl3">
-									₹ {{ product.price }}
+								<span class="stext-105 cl3" style="font-weight: bolder;">
+									₹ {{ product.price }} <span style="font-weight: 100;"><strike>₹ {{product.original_price}}</strike></span>   <span style="color: cadetblue;">
+										({{ product.offer_percentage }}% OFF)
+									</span> 
 								</span>
 							</div>
 
@@ -225,10 +216,7 @@
 				</div>
 				{% endfor %}
 			
-			
-
-
-
+		
 		
 
 		
@@ -250,5 +238,19 @@
 
 
 	</section>
+	<!-- <div style="background-color: chartreuse;"> -->
+		<center>
+		
+			{%if page_obj.has_previous %} {# whether the previous page exists #}
+				<a href="?page={{page_obj.previous_page_number}}"><</a> {# link to the prev page #}
+			{% endif %}
+			<span>{{page_obj.number}}</span> {# the current page_obj number #}
+			
+			{%if page_obj.has_next %} {# whether the next page exists #}
+				<a href="?page={{page_obj.next_page_number}}">></a> {# link to the next page #}
+			{% endif %}
+		</center>
+	<!-- </div> -->
+
 
 {% endblock %}

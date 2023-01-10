@@ -416,7 +416,7 @@ def otp_login(request):
         print(verification_check.status, 'hai')
         if verification_check.status == 'approved':
             
-            login(request,user)
+            auth.login(request, user)
         else:
             messages.error(request, 'otp ithalla')
             return redirect('otplogin')
@@ -482,6 +482,6 @@ def return_order(request, order_id):
         product.status = 'Return Requested'
         product.save()
         print('return request applied ')
-        return redirect('dashboard')
+        return redirect('home')
     return render(request, 'accounts/return_order.html', {'product': product})
 

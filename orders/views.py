@@ -53,9 +53,7 @@ def order_complete(request):
 def place_order(request, total=0, quantity=0):
     current_user = request.user
     
-    # shipping_address_id = request.POST['shipping_address']
-    # shipping_address = Address.objects.get(id=shipping_address_id)
-    # If the cart count is less than or equal to 0, then redirect back to shop
+  
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
     if cart_count <= 0:

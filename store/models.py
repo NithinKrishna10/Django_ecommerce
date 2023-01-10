@@ -37,9 +37,12 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, default=1, on_delete=models.CASCADE)
     gender = models.ForeignKey(Gender, default=1, on_delete=models.CASCADE)
     description = models.TextField(max_length=500, blank=True)
+    offer_percentage = models.IntegerField(default=0,validators=[MaxValueValidator(70)])
+    original_price= models.IntegerField(default=1, validators=[MinValueValidator(1)])
     price = models.IntegerField(default=1, validators=[MinValueValidator(1)])
     images = models.ImageField(upload_to='photos/products')
     stock = models.IntegerField(default=0)
+    is_trending= models.BooleanField(default=False)
     is_available = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -76,3 +79,8 @@ class Variation(models.Model):
 
     def __str__(self):
         return self.variation_value
+
+
+
+
+

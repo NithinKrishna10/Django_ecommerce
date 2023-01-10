@@ -45,9 +45,13 @@ urlpatterns = [
     # =================================== Coupon & Offer ===================================
     path('coupon_mange',views.coupon_mange,name='coupon_mange'),
     path('add_coupon',views.add_coupon,name='add_coupon'),
+    path('delete_coupon/<int:coupon_id>/',views.delete_coupon,name='delete_coupon'),
     
     path('offer_category', views.offer_category,name='offer_category'),
+    path('delete_offer_category/<int:cat_offer_id>/', views.delete_offer_category,name='delete_offer_category'),
     path('offer_product', views.offer_product,name='offer_product'),
+    path('delete_offer_product/<int:pro_offer_id>/', views.delete_offer_product,name='delete_offer_product'),
+
     
     
     # ==================================== Sales Report ======================================

@@ -1,3 +1,4 @@
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 
 from  accounts.models import UserProfile,Address
@@ -196,7 +197,8 @@ def remove_cart_item(request, product_id, cart_item_id):
 def cart(request, total=0, quantity=0, cart_items=None):
     
   
-    
+    discount = 0
+    code = "NO COUPON APPLIED"
     try:
         tax = 0
         grand_total = 0
@@ -205,7 +207,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
                 user=request.user, is_active=True)
             
             
-           
+         
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
@@ -218,7 +220,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
         grand_total = total + tax 
     except ObjectDoesNotExist:
         pass  # just ignore
-    
+        
     if request.method == 'POST':
         coupon = request.POST.get('coupon')
         coupon_obj = Coupon.objects.get(coupon_code =coupon)
@@ -230,17 +232,17 @@ def cart(request, total=0, quantity=0, cart_items=None):
             return redirect('cart')
         else:
             cart_item.coupon = coupon_obj
-            grand_total = grand_total - cart_item.coupon.discount_price
+            grand_total = int(grand_total - cart_item.coupon.discount_price)
             print(cart_item.coupon)
             cart_item.save()
             code = cart_item.coupon.coupon_code
-            # discount = cart_item.coupon.discount_price
-            # print(code)
+            discount = cart_item.coupon.discount_price
+            print(code)
 
           
     context = {
-        # 'discount' : discount,
-        # 'code' : code,
+        'discount' : discount,
+        'code' : code,
         'total': total,
         'quantity': quantity,
         'cart_items': cart_items,
@@ -249,7 +251,22 @@ def cart(request, total=0, quantity=0, cart_items=None):
     }
     return render(request, 'store/cart.html', context)
 
+
+def remove_coupon(request):
+    current_user = request.user
+    cart_items = CartItem.objects.filter(user = current_user)
+    print('hai')
     
+    
+    # cart_items.
+    for items in cart_items:
+        print(items.user)
+        items.coupon = None
+        
+        items.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+ 
 
 def checkout(request, total=0, quantity=0, cart_items=None):
     addresses = [0,0]
@@ -259,8 +276,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         if request.user.is_authenticated:
             addresses =Address.objects.filter(
                 user=request.user)
-            userpro =UserProfile.objects.filter(
-                user=request.user)
+         
             cart_items = CartItem.objects.filter(
                 user=request.user, is_active=True)
          
@@ -273,7 +289,10 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         tax = (5 * total)/100
         grand_total = total + tax 
         print(grand_total)
-        # grand_total = grand_total - cart_item.coupon.discount_price
+        try:
+            grand_total = grand_total - cart_item.coupon.discount_price
+        except:
+            pass
         
 
        

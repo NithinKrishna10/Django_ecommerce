@@ -6,6 +6,7 @@
 
 
 <div class="col-12">
+  {% include 'includes/alerts.html' %}
   <div class="card recent-sales overflow-auto">
 
     <div class="filter">
@@ -33,16 +34,17 @@
             <th scope="col"> Discount</th>
             <th scope="col">Minimum Amount</th>
             <th scope="col">Is Expired</th>
+            <th scope="col">Delete</th>
             <!-- <th scope="col">Delete</th> -->
           </tr>
         </thead>
         <tbody>
           {% for cr in coupon %}
           <tr>
+
+
             <!-- <th scope="row"><div style="width: 5rem;"><img class="img-fluid" src="{{ br.image.url }}" alt=""></div></th> -->
-            
-<!-- 
-            <th scope="row"><img class="img-fluid"  src="{{ br.cat_images.url }}" alt=""></th> -->
+            <!-- <th scope="row"><img class="img-fluid"  src="{{ br.cat_images.url }}" alt=""></th> -->
             <!-- <th scope="row"><a href="#"></a></th> -->
             <!-- <td>{{ br.id}}</td> -->
             <td>{{ cr.coupon_code}}</td>
@@ -51,13 +53,14 @@
             <!-- <td>{{ cr.is_expired }}</td> -->
             <td>
 
-              {% if prv.is_expire == True  %}
+              {% if cr.is_expire == True  %}
               <button type="submit"  class="btn btn-outline-danger">Active</button>
               {% else %}
               <button type="submit"  class="btn btn-outline-warning">Is Active</button>
               {% endif %}
             
           </td>
+          <td><a href="{% url 'delete_coupon' cr.id %}">Delete</a></td>
        
           </tr>
           {% endfor %}

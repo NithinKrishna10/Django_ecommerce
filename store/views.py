@@ -3,8 +3,10 @@ from django.shortcuts import redirect, render
 
 from cart.models import CartItem
 
-from .models import Product,Category,Gender,Brand
+from .models import Product,Category,Gender,Brand,Variation
 from django.db.models import Q
+from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
+
 # Create your views here.
 
 
@@ -13,11 +15,28 @@ def store_view(request):
     cate = Category.objects.all()
     gender = Gender.objects.all()
     brand = Brand.objects.all()
+    variation = Variation.objects.all()
+    products_paginater = Paginator(products,4)
+    
+    # page_num = request.GET.get('page')
+    
+    # page = products_paginater.get_page(page_num)
+    
         # Get the reviews
-
+    page_number = request.GET.get('page')
+    try:
+        page_obj = products_paginater.get_page(page_number)  # returns the desired page object
+    except PageNotAnInteger:
+        # if page_number is not an integer then assign the first page
+        page_obj = products_paginater.page(1)
+    except EmptyPage:
+        # if page is empty then return last page
+        page_obj = products_paginater.page(products_paginater.num_pages)
     context = {
+        'page_obj': page_obj,
+        'variation':variation,
         'brand': brand,
-        'products': products,
+        # 'products': products,
         'cate' : cate,
         'gender' : gender,
     }
@@ -51,15 +70,60 @@ def gender_view(request,gender_id):
     products = Product.objects.all().filter(is_available=True,gender=gen).order_by('created_date')
     cate = Category.objects.all()
     gender = Gender.objects.all()
+    brand = Brand.objects.all()
             # Get the reviews
 
     context = {
+            'brand' : brand,
             'products': products,
             'cate' : cate,
             'gender' : gender,
         }
     
     return render(request, 'store/storev.html', context)
+
+def brand_view(request,brand_id):
+    
+        # brand_id = int(request.POST.get('brand_id'))
+    brands = Brand.objects.get(id = brand_id)
+    print(brands.brand_name)
+    products = Product.objects.all().filter(is_available=True,brand=brands).order_by('created_date')
+    cate = Category.objects.all()
+    brand = Brand.objects.all()
+    gender = Gender.objects.all()
+            # Get the reviews
+
+    context = {
+            'products': products,
+            'cate' : cate,
+            'brand' : brand,
+             'gender' : gender,
+        }
+    
+    return render(request, 'store/storev.html',context)
+
+
+def price_filter(request,brand_id):
+    
+        # brand_id = int(request.POST.get('brand_id'))
+    brands = Brand.objects.get(id = brand_id)
+    print(brands.brand_name)
+    products = Product.objects.all().filter(is_available=True,brand=brands).order_by('created_date')
+    cate = Category.objects.all()
+    brand = Brand.objects.all()
+    gender = Gender.objects.all()
+            # Get the reviews
+
+    context = {
+            'products': products,
+            'cate' : cate,
+            'brand' : brand,
+             'gender' : gender,
+        }
+    
+    return render(request, 'store/storev.html',context)
+
+
 
 def search(request):
     if 'keyword' in request.GET:

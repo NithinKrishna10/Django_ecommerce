@@ -10,7 +10,7 @@ from django.db.models import Count,Sum
 from .models import SalesReport,sales_report,monthly_sales_report,Categoryoffer,Productoffer
 from accounts.models import Account,Return_request
 from orders.models import Order, OrderProducts,Orders
-from .forms import  ProductForm, UserForm, VariationsForm,BrandForm,CategoryOfferForm,CategoryForm,CouponForm
+from .forms import  ProductForm, UserForm, VariationsForm,BrandForm,CategoryOfferForm,CategoryForm,CouponForm,ProductOfferForm
 from store.models import Product, Category, Variation,Brand
 from cart.models import Coupon
 from django.contrib import messages, auth
@@ -20,6 +20,8 @@ from datetime import date, timedelta
 import io
 from xhtml2pdf import pisa 
 import xlwt
+from django.http import FileResponse
+from docx import Document
 
 # Create your views here.
 
@@ -157,12 +159,13 @@ def product(request):
 @login_required(login_url='admin_login')
 def add_products(request):
     print('hoii')
+    
     if request.method == 'POST':
 
         pform = ProductForm(request.POST, request.FILES)
  
         if pform.is_valid():
-
+            
             pform.save()
 
             return redirect('product_manage')
@@ -553,6 +556,35 @@ def dashboard(request):
                                 count = count + 1
                 user_graph_data.append(count)
                 user_graph_category.append(day)
+
+
+        elif duration == 'last_month':
+            sales_graph_data = []
+            sales_graph_category = []
+            user_graph_data = []
+            user_graph_category = []
+            count = 0
+            for day in range(1, 32):
+                count = 0
+                for sale in orders:
+                    if str(sale.Order_year) == str(current_date.year):
+                        if str(sale.Order_month) == str(current_date.month):
+                            if str(sale.Order_day) == str(day):
+                                count = count + 1
+                sales_graph_data.append(count)
+                sales_graph_category.append(day)
+            for day in range(1, 32):
+                count = 0
+                for user in users:
+                    if str(user.signup_year) == str(current_date.year):
+                        if str(user.signup_month) == str(current_date.month):
+                            if str(user.signup_day) == str(day):
+                                count = count + 1
+                user_graph_data.append(count)
+                user_graph_category.append(day)
+
+
+
         # this year
         else:
             sales_graph_data = []
@@ -610,9 +642,10 @@ def dashboard(request):
 def coupon_mange(request):
     
     coupon = Coupon.objects.all()
-    
-    
+    messages.success(request , 'Deleted Sucssful')   
     return render(request,'customadmin/coupenManage.html',{'coupon': coupon})
+
+
 @login_required(login_url='admin_login')
 def add_coupon(request):
     
@@ -633,21 +666,140 @@ def add_coupon(request):
         return redirect('admin_login')
 
 
+def delete_coupon(request,coupon_id):
+    coupon = Coupon.objects.get(id = coupon_id)
+    coupon.delete()
+    
+    return redirect('coupon_mange')
+    
+# ========================== Offers ==========================
+
 def offer_product(request):
-    
+    pro = Product.objects.all()
     pro_offer = Productoffer.objects.all()
+    poform = ProductOfferForm()
+    if request.method=='POST':
+        discount=int(request.POST.get('discount'))
+        product =request.POST.get('product')
+        is_active=request.POST.get('is_active')
+        if Productoffer.objects.filter(product=product).exists():
+            print('is exists')
+            messages.success(request , 'Offer is exists')
+        else:
+            print('no')
+            Productoffer.objects.create(product=product,discount=discount,is_active=is_active)
+            product = Product.objects.get(product_name=product)
+            print(product.product_name)
+            if product.offer_percentage < discount:
+                print('hai offer')
+                price=float(product.original_price)
+                product.price = price-price*float(discount)/100
+                product.offer_percentage = discount
+                product.save()
+                messages.success(request , 'Offer is Applied')
+                
+            else:
+                pass
+            
+        
+        return redirect('offer_product')
+    
+    context={
+            'pro' : pro,
+            'pro_offer': pro_offer, 
+             'poform':poform,
+             }
+    return render(request,'customadmin/product_offer.html',context)   
+    
+def delete_offer_product(request,pro_offer_id):
+    productoff = Productoffer.objects.get(id = pro_offer_id)
+    product=Product.objects.get(product_name=productoff.product )
     
     
-    return render(request,'customadmin/product_offer.html',{'pro_offer': pro_offer})   
+    if Categoryoffer.objects.filter(category=product.category).exists():
+        catoff = Categoryoffer.objects.get(category=product.category)
+        discount = catoff.discount
+        price=float(product.original_price)
+        product.price=price-price*float(discount)/100
+        product.offer_percentage = discount
+        product.save()
+        messages.success(request , 'Offer is deleted')
+    else:
+        product.price = product.original_price
+        product.offer_percentage = 0
+        product.save()    
+        messages.success(request , 'Offer is Deleted')
+    productoff.delete()
     
+    return redirect('offer_category')
+    
+
 
 
 def offer_category(request):
-    
+    cat = Category.objects.all()
     cat_offer = Categoryoffer.objects.all()
+    coform = CategoryOfferForm()
     
+    if request.method=='POST':
+        discount=int(request.POST.get('discount'))
+        category=request.POST.get('category')
+        is_active=request.POST.get('is_active')
+        print(category)
+        if Categoryoffer.objects.filter(category=category).exists():
+            print('is exists')
+            messages.success(request , 'Offer is exists')
+        else:
+            print('no')
+            Categoryoffer.objects.create(category=category,discount=discount,is_active=is_active)
+            cat=Category.objects.get(category_name=category).pk
+            product=Product.objects.filter(category=cat)
+            
+            for items in product:
+                print(type(items.offer_percentage))
+                print(type(discount))
+                if items.offer_percentage < discount:
+                    print(items.product_name)
+                    price=float(items.original_price)
+                    items.price=price-price*float(discount)/100
+                    items.offer_percentage = discount
+                    items.save()
+            messages.success(request , 'Offer Added Sucssfully')   
+            return redirect('offer_category')
+    context ={
+        'cat_offer': cat_offer,
+        'coform':coform,
+        'cat':cat,
+        }
+    return render(request,'customadmin/category_offer.html',context)   
+
+
+
+def delete_offer_category(request,cat_offer_id):
+    categoryoff = Categoryoffer.objects.get(id = cat_offer_id)
+    cat=Category.objects.get(category_name=categoryoff.category )
+    product=Product.objects.filter(category=cat)
+    discount = categoryoff.discount
+    for items in product:
+        if Productoffer.objects.filter(product=items.product_name).exists():
+            poff =Productoffer.objects.get(product=items.product_name)
+            discount = poff.discount
+            print(items.product_name)
+            products = Product.objects.get(product_name=items.product_name)
+            price=float(products.original_price)
+            products.price = price-price*float(discount)/100
+            products.offer_percentage = discount
+            print(products.offer_percentage)
+            products.save()
+        else:
+               
+            print(items.product_name)
+            items.price=items.original_price
+            items.offer_percentage = 0
+            items.save()
+    categoryoff.delete()
     
-    return render(request,'customadmin/category_offer.html',{'cat_offer': cat_offer})   
+    return redirect('offer_category')
     
 
 

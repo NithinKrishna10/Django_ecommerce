@@ -56,10 +56,12 @@
                 {% endif %}
               </form>
             </td>
-            <td><form action="{% url 'deleteVariant' prv.id %}" method="POST"> 
+            <td>
+              <form action="{% url 'deleteVariant' prv.id %}" method="POST"> 
               {% csrf_token %}
               <button type="submit" onclick="showConfirm()" class="btn btn-outline-danger">Delete</button>
-            </form></td>
+            </form>
+          </td>
               
             </tr>
             {% endfor %}

@@ -1,0 +1,88 @@
+{% extends 'customadmin/adminbase.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- <div style="display: flex;">
+  <form action="" method="POST">
+    {% csrf_token %}
+  {{coform}}
+  <button class="btn btn-primary" type="submit">Submit form</button>
+</form>
+</div> -->
+
+
+
+<div class="card row">
+
+  <h5 class="card-title">Add Offer</h5>
+
+
+  <form style="display: flex; margin: 1rem;" method="POST">
+    {% csrf_token %}
+    <div class="col-md-3">
+      <label for="validationDefault04" class="form-label">Category</label>
+      <select class="form-select" name="product" id="validationDefault04" required>
+        {% for item in pro%}
+        <option>{{item.product_name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3 ml-12">
+      <label for="validationDefault01" class="form-label">First name</label>
+      <input type="number" name="discount" class="form-control" id="validationDefault01" required>
+    </div>
+    <div class="col-md-3">
+      <label for="validationDefault04" class="form-label">Category</label>
+      <select class="form-select" name="is_active" id="validationDefault04" required>
+        <option>True</option>
+        <option>False</option>
+
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <button class="btn btn-primary" type="submit">Submit form</button>
+    </div>
+  </form>
+
+
+</div>
+
+<section style="margin-top: 2rem;">
+  {% include 'includes/alerts.html' %}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title" style="font-size: larger;">Category Offers</h5>
+      <hr>
+
+      <!-- Default Table -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Category</th>
+            <th scope="col">Discount</th>
+            <th scope="col">Is_Active</th>
+            <th scope="col"> Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in pro_offer%}
+          <tr>
+            <th scope="row">1</th>
+            <td>{{ p.product }}</td>
+            <td>{{ p.discount}}</td>
+            <td>{{ p.is_active}}</td>
+            <td><a href="{% url 'delete_offer_product' p.id %}">DELETE</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <!-- End Default Table Example -->
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}

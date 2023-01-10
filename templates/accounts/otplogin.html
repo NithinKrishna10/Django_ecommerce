@@ -4,7 +4,7 @@
 <br>
 
 <div class="row" style="margin-top: 5rem;">
-   
+  {% include 'includes/alerts.html' %}
     <div class="container">
     <center>
     <form action="{% url 'otplogin' %}" method='POST' autocomplete='off'>
@@ -21,10 +21,10 @@
       
         <!-- Register buttons -->
         <div class="text-center">
-          <p>Sign in with : <a href="/resendotp/">Resend OTP</a></p>
+          <!-- <p>Sign in with : <a href="/resendotp/">Resend OTP</a></p> -->
           
         </div>
       </form>
 </div>
-
+</div>
 {% endblock %}

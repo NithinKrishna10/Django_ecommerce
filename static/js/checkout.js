@@ -64,14 +64,14 @@ $(document).ready(function () {
                     console.log(response);
                 }
             });
-
+            console.log(response.grand_total)
             // swal("Hello world!");
             // console.log("avoo")
             var options = {
                 "key": "rzp_test_wPnfJtBVlSirVZ", // Enter the Key ID generated from the Dashboard
-                "amount": 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "amount": response.grand_total, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
                 "currency": "INR",
-                "name": "NITHIN BLAZE",
+                "name": "BLAZE STORE",
                 "description": "Thank you for buying",
                 "image": "https://example.com/your_logo",
                 // "order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
