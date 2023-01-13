@@ -22,8 +22,8 @@ After=network.target
 [Service]
 User=ubuntu
 Group=www-data
-WorkingDirectory=/home/ubuntu/myproject/Django_ecommerce
-ExecStart=/home/ubuntu/myproject/myprojectenv/bin/gunicorn \
+WorkingDirectory=/home/ubuntu/myprojectdir/Django_ecommerce
+ExecStart=/home/ubuntu/myprojectdir/myprojectenv/bin/gunicorn \
           --access-logfile - \
           --workers 3 \
           --bind unix:/run/gunicorn.sock \

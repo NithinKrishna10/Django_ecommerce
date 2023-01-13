@@ -62,6 +62,7 @@ class VariationManager(models.Manager):
         return super(VariationManager, self).filter(variation_category='size', is_active=True)
 
 
+
 variation_category_choice = (
     ('color', 'color'),
     ('size', 'size'),
