@@ -85,11 +85,12 @@ AUTH_USER_MODEL = 'accounts.Account'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
+
 'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'e-commerce',
-        'USER' : 'postgres',
-        'PASSWORD' : '10082002',
+        'NAME': 'myproject',
+        'USER' : 'myprojectuser',
+        'PASSWORD' : 'password',
         'HOST' : 'localhost',
     }
 }
