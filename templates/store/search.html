@@ -1,0 +1,120 @@
+{% extends 'indexhome.html' %}
+{% load static %}
+
+{% block content %}
+<!-- <div class="container" style="text-align: center;">
+    <h1>STORE</h1>
+</div>
+<div class="container">
+	<div class="row">
+    {% for product in products %}
+		<div class="col-md-3" style="border: 5px solid rgb(121, 129, 132); margin: auto;">
+			<div> 
+				<img class="img-fluid" src="{{ product.images.url }}" alt="">
+				</div>
+				<h4>{{ product.brand }}</h4>
+				<div style="display: flex; text-decoration: none;">
+                    <div><h6 ><a href="{{ product.get_url }}" >{{ product.product_name }}    </a></h6></div>
+                            <div style="padding-left: 55px;"><h6 class="text-end">${{ product.price }}</h6></div>
+                    
+                            </div>
+		</div>
+    {% endfor %} -->
+
+<!--   
+</div>
+</div> -->
+
+<section style="margin-top: 5%;"> 
+
+	<!-- Product -->
+
+	<div class="bg0 m-t-23 p-b-140">
+		<div class="container">
+			{% if 'search' in request.path %}
+			<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
+				Search Result   ({{product_count}})
+			</button>
+		{% else %}
+			
+		<h1>Nothing found</h1>
+        {% endif %}
+
+			<div class="row isotope-grid">
+
+				{% for product in products  %}
+				<div class="col-4 col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+					<!-- Block2 -->
+					<div class="block2">
+						<div class="block2-pic hov-img0">
+							<img src="{{ product.images.url }}" alt="IMG-PRODUCT">
+
+							<a href="{{ product.get_url }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 ">
+								Quick View
+							</a>
+						</div>
+
+						<div class="block2-txt flex-w flex-t p-t-14">
+							<div class="block2-txt-child1 flex-col-l ">
+								<a href="{{ product.get_url }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+									{{ product.brand }}
+								</a>
+
+								<span class="stext-105 cl3" style="font-weight: bolder;">
+									₹ {{ product.price }} <span style="font-weight: 100;"><strike>₹ {{product.original_price}}</strike></span>   <span style="color: cadetblue;">
+										({{ product.offer_percentage }}% OFF)
+									</span> 
+								</span>
+							</div>
+
+							<div class="block2-txt-child2 flex-r p-t-3">
+								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+									<img class="icon-heart1 dis-block trans-04" src="{% static 'main/images/icons/icon-heart-01.png' %}" alt="ICON">
+									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'main/images/icons/icon-heart-02.png' %}" alt="ICON">
+								</a>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				{% endfor %}
+			
+		
+                
+
+
+		
+		
+	
+
+
+			
+
+		
+
+			</div>
+
+			<!-- Load more -->
+			<!-- ____ -->
+		</div>
+	</div>
+
+
+
+	</section>
+	<!-- <div style="background-color: chartreuse;"> -->
+		<center>
+		
+			{%if page_obj.has_previous %} {# whether the previous page exists #}
+				<a href="?page={{page_obj.previous_page_number}}"><</a> {# link to the prev page #}
+			{% endif %}
+			<span>{{page_obj.number}}</span> {# the current page_obj number #}
+			
+			{%if page_obj.has_next %} {# whether the next page exists #}
+				<a href="?page={{page_obj.next_page_number}}">></a> {# link to the next page #}
+			{% endif %}
+		</center>
+	<!-- </div> -->
+
+
+{% endblock %}

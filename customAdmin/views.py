@@ -163,7 +163,7 @@ def add_products(request):
     if request.method == 'POST':
 
         pform = ProductForm(request.POST, request.FILES)
- 
+        print(pform.errors)
         if pform.is_valid():
             
             pform.save()

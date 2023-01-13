@@ -102,11 +102,11 @@ class Address(models.Model):
     address1 = models.CharField(max_length=255)
     address2 = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=255)
-    phone = models.CharField(max_length=15,default=0)
+    phone1 = models.CharField(max_length=15,default=0)
     state = models.CharField(max_length=255)
     country = models.CharField(max_length=255)
     pincode = models.CharField(max_length=255)
-    phone = models.CharField(max_length=15,default=0)
+    phone2 = models.CharField(max_length=15,default=0)
     
     def __str__(self):
         return self.user.first_name

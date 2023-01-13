@@ -314,7 +314,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
 
 def updatecart(request):
     
-    
+
     user = 'guest'
     if 'user' in request.session:
         user = request.session['user']
@@ -327,6 +327,7 @@ def updatecart(request):
         task = request.POST.get('task')
         print(task)
         try:
+            
             user = Account.objects.get(email=user)
         except:
             user = guest_id
@@ -343,21 +344,25 @@ def updatecart(request):
             # updated_quantity = int(quantity) + 1
             if product.quantity < stock.stock :
                product.quantity += 1
+               updated_quantity = product.quantity
+               
                product.save()
             else:
                 pass
             print(product.quantity)
             if stock_balance > 1:
-                product.quantity = updated_quantity
+                # product.quantity = updated_quantity
                 print('updated quantity', updated_quantity)
                 # stock manage
                 stock.stock = stock.stock - 1
+                
             else:
                 updated_quantity = quantity
         else:
             # updated_quantity = quantity - 1
             if product.quantity >    1 :
                product.quantity -= 1
+               updated_quantity =  product.quantity
                product.save()           
             
             if updated_quantity >= 1:
@@ -367,14 +372,38 @@ def updatecart(request):
                 stock.stock = stock.stock + 1
             else:
                 updated_quantity = quantity
-      
-        # product.save()
-   
+        # try:
+        #     tax = 0
+        #     grand_total = 0
+        #     if request.user.is_authenticated:
+        #         addresses =Address.objects.filter(
+        #             user=request.user)
+            
+        #         cart_items = CartItem.objects.filter(
+        #             user=request.user, is_active=True)
+            
+        #     else:
+        #         cart = Cart.objects.get(cart_id=_cart_id(request))
+        #         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        #     for cart_item in cart_items:
+        #         total += (cart_item.product.price * cart_item.quantity)
+        #         quantity += cart_item.quantity
+        #     tax = (5 * total)/100
+        #     grand_total = total + tax 
+        #     print(grand_total)
+        #     # product.save()
+        # except ObjectDoesNotExist:
+            
+        #     pass
         
         print('saved the changes in database')
         return JsonResponse({
             'updated_quantity': updated_quantity,
-            'stock': stock.stock,
+            # 'stock': stock.stock,
+            # 'grand_total' : grand_total,
+            # 'tax':tax,
+             
+            
             # 'total_price': product.total_price,
             
             

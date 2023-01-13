@@ -55,18 +55,18 @@
                                     
                                     <div class="input-group input-spinner">
                                         <div class="input-group-prepend">
-                                        <button class="btn btn-light update" onclick="quantity_minus('{{cart_item.id}}')" > <i class="fa fa-minus"></i> </button>
+                                        <button class="btn btn-light update" onclick="quantity_minus('{{cart_item.id}}','{{ cart_item.product.price }}')" > <i class="fa fa-minus"></i> </button>
 
                                         </div>
                                         <input type="text" class="form-control" id="{{cart_item.id}}" value="{{ cart_item.quantity }}">
                                         <div class="input-group-append">
-                                           <button class="btn btn-light update" onclick="quantity_plus('{{cart_item.id}}')"> <i class="fa fa-plus"></i> </button>
+                                           <button class="btn btn-light update" onclick="quantity_plus('{{cart_item.id}}','{{ cart_item.product.price }}')"> <i class="fa fa-plus"></i> </button>
 
                                         </div>
                                     </div> 
                               <h4><a href="{% url 'remove_cart' cart_item.id  %}">Remove Cart</a></h4>
                             </td>
-                                <td class="column-4">₹{{ cart_item.product.price }}</td>
+                                <td class="column-4" id="{{cart_item.id}}price">₹{{ cart_item.product.price }}</td>
                                 <!-- <td class="column-5"></td> -->
 
                                 
@@ -120,21 +120,21 @@
                         <div class="card-body">
                             <dl class="dlist-align">
                               <dt>Total price:</dt>
-                              <dd class="text-right">₹ {{total}}</dd>
+                              <dd class="text-right" id="totalR">₹ {{total}}</dd>
                             </dl>
                             <dl class="dlist-align">
                               <dt>Tax:</dt>
-                              <dd class="text-right"> ₹ {{tax}}</dd>
+                              <dd class="text-right" id="taxR"> ₹ {{tax}}</dd>
                             </dl>
                            
                             <dl class="dlist-align">
                                 <dt>Coupon Discount:</dt>
-                                <dd class="text-right">₹{{discount}}</dd>
+                                <dd class="text-right" id="discountR">₹{{discount}}</dd>
                               </dl>
                             
                             <dl class="dlist-align">
                               <dt>Grand Total:</dt>
-                              <dd class="text-right text-dark b"><strong>₹ {{grand_total}}</strong></dd>
+                              <dd class="text-right text-dark b"><strong id="grandTotalR">₹ {{grand_total}}</strong></dd>
                             </dl>
                             <hr>
                             <!-- <p class="text-center mb-3">
@@ -203,59 +203,86 @@
 
     function quantity_minus(id) {
         let qty = document.getElementById(id).value;
-        if (qty > 1){
-        qty = parseInt(qty)-1;
+        if(qty>1){
+            quantity = document.getElementById(id + 'q')
+            quantity = document.getElementById(id + 'q')
+            $.ajaxSetup({
+                data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+            });
+            $.ajax({
+                url: "/cart/updatecart",
+                method: "post",
+                data: { 'cart_id': id, 'quantity': quantity, 'task': 'minus' },
+                success: function (data) {
+                    document.getElementById(id).value=data['updated_quantity'];
+                    let dataR = bill(document.getElementById(id+'price').innerHTML.slice(1),document.getElementById('totalR').innerHTML.slice(1).trim(),'minus');
+                    document.getElementById('totalR').innerHTML ="₹ " + dataR.total;
+                    document.getElementById('taxR').innerHTML = "₹ " + dataR.tax;
+                    document.getElementById('grandTotalR').innerHTML = "₹ " + dataR.grandTotal;
+                    
+                },
+               
+            })
+        } else {
+            swal({
+                title: "Oops!",
+                text: "Click Remove Cart ",
+                type: "failed"
+            })
         }
-        document.getElementById(id).value=qty;
-        quantity = document.getElementById(id + 'q')
-        $.ajaxSetup({
-            data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
-        });
-        $.ajax({
-            url:"/cart/updatecart",
-            method: "post",
-            data: { 'cart_id': id, 'quantity': quantity, 'task': 'minus' },
-            success: function (data) {
-                console.log('stock available : ' + data['stock_available'])
-                document.getElementById(id + 'q').innerHTML = data['updated_quantity']
-                document.getElementById(id + 'tp').innerHTML = data['total_price']
-                document.getElementById('sub_total').innerHTML = data['sub_total']
-                document.getElementById('total').innerHTML = (parseInt(data['sub_total'])) + (parseInt(data['delivery_charge']))
-
-            }
-        })
     }
 
     
     function quantity_plus(id) {
         let qty = document.getElementById(id).value;
-        if (qty < 5){
-            qty = parseInt(qty)+1;
-            }
-        document.getElementById(id).value=qty;
-        quantity = document.getElementById(id + 'q')
-        quantity = document.getElementById(id + 'q')
-        $.ajaxSetup({
-            data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
-        });
-        $.ajax({
-            url: "/cart/updatecart",
-            method: "post",
-            data: { 'cart_id': id, 'quantity': quantity, 'task': 'plus' },
-            success: function (data) {
-                console.log(data['updated_quantity']+"jjjjjjjjj")
-                console.log('stock available : ' + data['stock_available'])
-                document.getElementById(id + 'q').innerHTML = data['updated_quantity']
-                document.getElementById(id + 'tp').innerHTML = data['total_price']
-                document.getElementById('sub_total').innerHTML = data['sub_total']
-                document.getElementById('total').innerHTML = data['sub_total'] + data['delivery_charge']
-            }
-        })
+        if(qty<10){
+            quantity = document.getElementById(id + 'q')
+            quantity = document.getElementById(id + 'q')
+            $.ajaxSetup({
+                data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+            });
+            $.ajax({
+                url: "/cart/updatecart",
+                method: "post",
+                data: { 'cart_id': id, 'quantity': quantity, 'task': 'plus' },
+                success: function (data) {
+                    document.getElementById(id).value=data['updated_quantity'];
+                    let dataR = bill(document.getElementById(id+'price').innerHTML.slice(1),document.getElementById('totalR').innerHTML.slice(1).trim(),'plus');
+                    document.getElementById('totalR').innerHTML ="₹ " + dataR.total;
+                    document.getElementById('taxR').innerHTML = "₹ " + dataR.tax;
+                    document.getElementById('grandTotalR').innerHTML = "₹ " + dataR.grandTotal;
+                    
+                },
+                error: function (){
+                    swal({
+                        title: "Oops!",
+                        text: "Quantity limit Exceeded!",
+                        type: "failed"
+                    })
+                }
+            })
+        } else {
+            swal({
+                title: "Oops!",
+                text: "Quantity limit Exceeded!",
+                type: "failed"
+            })
+        }
     }
 
-
-
-
+    function bill(price,total,type){
+        price = parseInt(price);
+        if(type=='plus'){
+            total = parseInt(total) + price;   
+        }
+        else {
+            total = parseInt(total) - price;
+        }
+        let tax = parseFloat((total * 5 /100).toFixed(1));
+        let grandTotal = total + tax;
+        return {total:total,tax:tax,grandTotal:grandTotal}
+    }
+    
 </script>
 {% endblock %}
 

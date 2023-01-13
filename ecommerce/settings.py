@@ -87,12 +87,14 @@ AUTH_USER_MODEL = 'accounts.Account'
 DATABASES = {
 'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'myproject',
-        'USER' : 'myprojectuser',
-        'PASSWORD' : 'password',
+        'NAME': 'e-commerce',
+        'USER' : 'postgres',
+        'PASSWORD' : '10082002',
         'HOST' : 'localhost',
     }
 }
+
+
 
 
 # Password validation

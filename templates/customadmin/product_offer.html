@@ -21,7 +21,7 @@
   <form style="display: flex; margin: 1rem;" method="POST">
     {% csrf_token %}
     <div class="col-md-3">
-      <label for="validationDefault04" class="form-label">Category</label>
+      <label for="validationDefault04" class="form-label">Product</label>
       <select class="form-select" name="product" id="validationDefault04" required>
         {% for item in pro%}
         <option>{{item.product_name}}</option>
@@ -29,11 +29,11 @@
       </select>
     </div>
     <div class="col-md-3 ml-12">
-      <label for="validationDefault01" class="form-label">First name</label>
+      <label for="validationDefault01" class="form-label">Offer Percentage</label>
       <input type="number" name="discount" class="form-control" id="validationDefault01" required>
     </div>
     <div class="col-md-3">
-      <label for="validationDefault04" class="form-label">Category</label>
+      <label for="validationDefault04" class="form-label">Is Active</label>
       <select class="form-select" name="is_active" id="validationDefault04" required>
         <option>True</option>
         <option>False</option>

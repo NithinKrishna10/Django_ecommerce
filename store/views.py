@@ -97,7 +97,7 @@ def brand_view(request,brand_id):
             'products': products,
             'cate' : cate,
             'brand' : brand,
-             'gender' : gender,
+            'gender' : gender,
         }
     
     return render(request, 'store/storev.html',context)
@@ -118,7 +118,7 @@ def price_filter(request,brand_id):
             'products': products,
             'cate' : cate,
             'brand' : brand,
-             'gender' : gender,
+            'gender' : gender,
         }
     
     return render(request, 'store/storev.html',context)
@@ -135,4 +135,4 @@ def search(request):
         'products': products,
         'product_count': product_count,
     }
-    return render(request, 'store/storev.html', context)
+    return render(request, 'store/search.html', context)

@@ -70,29 +70,29 @@ def register(request):
     return render(request, 'accounts/register.html', context)
 
 
+# def login_user(request):
+
+#     if request.method == 'POST':
+#         email = request.POST['email']
+#         password = request.POST['password']
+
+#         user = auth.authenticate(email=email, password=password)
+
+#         if user is not None:
+#             login( user)
+
+#             # request.session['email'] = email
+#             fname = user.first_name
+#             messages.success(request, "Logged In Sucessfully!!")
+#             return redirect('/')
+#         else:
+#             messages.error(request, "wrong details!!")
+#             return redirect('login_user')
+
+#     return render(request, "accounts/login.html")
+
+
 def login_user(request):
-
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-
-        user = auth.authenticate(email=email, password=password)
-
-        if user is not None:
-            # login(request, user)
-
-            request.session['email'] = email
-            fname = user.first_name
-            messages.success(request, "Logged In Sucessfully!!")
-            return redirect('/')
-        else:
-            messages.error(request, "wrong details!!")
-            return redirect('login_user')
-
-    return render(request, "accounts/login.html")
-
-
-def login(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
@@ -150,7 +150,7 @@ def login(request):
                     nextPage = params['next']
                     return redirect(nextPage)
             except:
-                return redirect('dashboard')
+                return redirect('dashboarduser')
         else:
             messages.error(request, 'Invalid login credentials')
             return redirect('login')
@@ -275,22 +275,41 @@ def add_address(request):
     if request.user.is_authenticated:
   
         if request.method == 'POST':
+            user = request.user
+            name = request.POST.get('first_name')  
+            address1 = request.POST.get('address_line_1')
+            address2 = request.POST.get('address_line_2')
+            city = request.POST.get('city')
+            phone1 = request.POST.get('phone1')
+            phone2 = request.POST.get('phone2')
+            state = request.POST.get('state')
+            country = request.POST.get('country')
+            pincode = request.POST.get('pincode')
+            print(user)
+            print(name)
+            print(address1)
+            print(address2)
+            print(city)
+            print(phone1)
+            print(phone2)
+            Address.objects.create(user=user,name=name,address1=address1,address2=address2,city=city,phone1=phone1,phone2=phone2,state=state,country=country,pincode=pincode)
+            
+            return redirect('address_manage')
+        #     adform = AddressForm(request.POST, request.FILES)
+        #     print(adform.errors)
+        #     if adform.is_valid():
 
-            adform = AddressForm(request.POST, request.FILES)
-            print(adform.errors)
-            if adform.is_valid():
+        #         adform.save()
 
-                adform.save()
+        #         return redirect('dashboarduser')
+        #     else:
+        #         print('ytuiowetkii')
 
-                return redirect('dashboarduser')
-            else:
-                print('ytuiowetkii')
-
-        adform = AddressForm()
-        context = {
-            'adform': adform
-        }
-        return render(request, 'accounts/add_address.html', context)
+        # adform = AddressForm()
+        # context = {
+        #     'adform': adform
+        # }
+        return render(request, 'accounts/add_address.html')
     else:
         return redirect('login_user')
 
