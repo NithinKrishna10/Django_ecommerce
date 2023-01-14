@@ -200,7 +200,7 @@ def dashboarduser(request):
     orders_count = orders.count()
 
     print(orders_count)
-    userprofile = UserProfile.objects.get(user_id=request.user.id)
+    userprofile = UserProfile.objects.get(user=request.user.id)
     context = {
         'orders_count': orders_count,
         'userprofile': userprofile,

@@ -38,3 +38,4 @@ WantedBy=multi-user.target
 
 
 
+/home/ubuntu/myprojectdir/Django_ecommerce;
