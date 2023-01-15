@@ -182,9 +182,10 @@ def dashboarduser(request):
             'orders_count': orders_count,
             'userprofile': userprofile,
         }
+        return render(request, 'accounts/dashboard.html', context)
     except:
         pass
-    return render(request, 'accounts/dashboard.html', context)
+    return render(request, 'accounts/dashboard.html')
 
 
 @login_required(login_url='login')
