@@ -228,7 +228,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
         if not coupon_obj:
           
             
-            messages.warning(request , "Your account")
+            messages.warning(request , "Not a valid cupon")
             return redirect('cart')
         else:
             cart_item.coupon = coupon_obj

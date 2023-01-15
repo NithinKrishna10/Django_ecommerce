@@ -5,63 +5,65 @@
 
 <section class="section-conten padding-y bg" style="margin-top: 5%;">
 
-{% include 'includes/alerts.html' %}
-<div class="container">
-	<div class="row">
-	{% include 'includes/dashboard_sidebar.html' %}
-	<main class="col-md-9">
-		<article class="card">
-		<header class="card-header">
-			<strong class="d-inline-block mr-3">Logged in as:</strong>
-			<span>{{user.full_name}}</span>
-		</header>
-		<div class="card-body">
-			<div class="row">
-
-			<div class="col-md-6">
-				<div class="card" style="text-align:center;">
+	{% include 'includes/alerts.html' %}
+	<div class="container">
+		<div class="row">
+			{% include 'includes/dashboard_sidebar.html' %}
+			<main class="col-md-9">
+				<article class="card">
+					<header class="card-header">
+						<strong class="d-inline-block mr-3">Logged in as:</strong>
+						<span>{{user.full_name}}</span>
+					</header>
 					<div class="card-body">
-						<h5 class="card-title">Total Orders</h5>
-						<h4>{{orders_count}}</h4>
-						<a href="{% url 'my_orders' %}">View Orders</a>
-					</div>
-				</div>
+						<div class="row">
+
+							<div class="col-md-6">
+								<div class="card" style="text-align:center;">
+									<div class="card-body">
+										<h5 class="card-title">Total Orders</h5>
+										<h4>{{orders_count}}</h4>
+										<a href="{% url 'my_orders' %}">View Orders</a>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card" style="text-align:center;">
+									<div class="card-body">
+										<a href="{% url 'edit_profile' %}">
+											<img src="{{userprofile.profile_picture.url}}" alt="User Profile Picture"
+												width="50" height="50" style="border-radius:50%;"></a>
+										<p>{{user.first_name}}</p>
+										<p class="mb-0">{{user.email}}</p>
+										<p>{{user.phone_number}}</p>
+
+									</div>
+								</div>
+							</div>
+
+						</div> <!-- row.// -->
+					</div> <!-- card-body .// -->
+
+				</article> <!-- order-group.// -->
+			</main>
+		</div> <!-- row.// -->
+
+		<div class="row">
+			{% for address in addresses %}
+			<div>
+				<input type="radio" name="shipping_address" value="{{ address.id }}">
+				{{ address.name }}<br>
+				{{ address.address1 }}<br>
+				{% if address.address2 %}
+				{{ address.address2 }}<br>
+				{% endif %}
+				{{ address.city }}, {{ address.state }} {{ address.zipcode }}<br>
+				{{ address.country }}
 			</div>
-			<div class="col-md-6">
-				<div class="card" style="text-align:center;">
-					<div class="card-body">
-						<img src="{{userprofile.profile_picture.url}}" alt="User Profile Picture" width="50" height="50" style="border-radius:50%;">
-						<p>{{user.first_name}}</p>
-						<p class="mb-0">{{user.email}}</p>
-						<p>{{user.phone_number}}</p>
-						
-					</div>
-				</div>
-			</div>
-
-			</div> <!-- row.// -->
-		</div> <!-- card-body .// -->
-
-		</article> <!-- order-group.// -->
-	</main>
-</div> <!-- row.// -->
-
-<div class="row">
-	{% for address in addresses %}
-	<div>
-		<input type="radio" name="shipping_address" value="{{ address.id }}">
-		{{ address.name }}<br>
-		{{ address.address1 }}<br>
-		{% if address.address2 %}
-			{{ address.address2 }}<br>
-		{% endif %}
-		{{ address.city }}, {{ address.state }} {{ address.zipcode }}<br>
-		{{ address.country }}
+			<hr>
+			{% endfor %}
+		</div>
 	</div>
-	<hr>
-{% endfor %}
-</div>
-</div>
 
 
-{% endblock %}
+	{% endblock %}

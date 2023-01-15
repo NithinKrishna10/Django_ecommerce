@@ -12,4 +12,21 @@ urlpatterns = [
       path('brand_view/<int:brand_id>',views.brand_view,name='brand_view'),
       # path('price_filter',views.price_filter,name='price_filter'),
       path('search/', views.search, name='search'),
+      path('price_high/', views.price_high, name='price_high'),
+      path('price_low/', views.price_low, name='price_low'),
+      path('newest/', views.newest, name='newest'),
+
+      path('offer_high/', views.offer_high, name='offer_high'),
+
 ]
+# DATABASES = {
+
+# 'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'myproject',
+#         'USER' : 'myprojectuser',
+#         'PASSWORD' : 'password',
+#         'HOST' : 'localhost',
+#     }
+
+# }

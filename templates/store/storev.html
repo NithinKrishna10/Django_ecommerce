@@ -31,26 +31,45 @@
 
 	<div class="bg0 m-t-23 p-b-140">
 		<div class="container">
-			{% if 'search' in request.path %}
+			<!-- {% if 'search' in request.path %}
 			<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
 				Search Result
 			</button>
-		{% else %}
+		{% else %} -->
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" data-filter="*">
-						<a href="{% url 'store_view' %}"> All Products</a>
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 " data-filter="*">
+						<a href="{% url 'store_view' %} " class="filter-link stext-106 trans-04"> All Products</a>
 					</button>
-					{% for gen in gender %}
+				
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-					<a href="{% url 'gender_view' gen.id %}">	{{gen.gender}} </a>
+					<a href="{% url 'price_high' %}" class="filter-link stext-106 trans-04">Price High to Low</a>
 					</button>
-					{% endfor %}
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
+						<a href="{% url 'price_low' %}" class="filter-link stext-106 trans-04">Price Low to High</a>
+						</button>
+						<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
+							<a href="{% url 'newest' %}" class="filter-link stext-106 trans-04">Newest First</a>
+							</button>
+					
 
 					
 				</div>
+				
 
 				<div class="flex-w flex-c-m m-tb-10">
+					<!-- <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4">
+						<select id="cars" name="cars" style="width: 100%; height: 100%; border: 0.5px solid grey;" >
+							<option value="">Sort By</option>
+
+							<option value=""><a href="{% url 'price_high' %}">Price-High to Low</a></option>
+							<option value="/price_high"><a href="">Price-Low to High</a></option>
+							<option value=""><a href="">Offer</a></option>
+
+						  </select>
+					</div> -->
+
+
 					<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
 						<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
 						<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
@@ -71,7 +90,7 @@
 							<i class="zmdi zmdi-search"></i>
 						</button>
 
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
+						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search" id="search" onkeyup="search()">
 					</div>	
 				</div>
 
@@ -98,17 +117,17 @@
 
 						<div class="filter-col2 p-r-15 p-b-27">
 							<div class="mtext-102 cl2 p-b-15">
-								Price
+								Gender
 							</div>
 
 							<ul>
-							
+								{% for gen in gender %}
 								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										All
+									<a href="{% url 'gender_view' gen.id %}" class="filter-link stext-106 trans-04">
+										{{gen.gender}}
 									</a>
 								</li>
-
+							 {%	endfor %}
 						
 							</ul>
 						</div>
@@ -173,14 +192,14 @@
 					</div>
 				</div>
 			</div>
-			{% endif %}
+			<!-- {% endif %} -->
 
 
 
 			<div class="row isotope-grid">
 
 				{% for product in page_obj.object_list  %}
-				<div class="col-4 col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+				<div class="col-4 col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women productCard">
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
@@ -193,7 +212,7 @@
 
 						<div class="block2-txt flex-w flex-t p-t-14">
 							<div class="block2-txt-child1 flex-col-l ">
-								<a href="{{ product.get_url }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+								<a href="{{ product.get_url }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 brandNameR">
 									{{ product.brand }}
 								</a>
 
@@ -218,16 +237,6 @@
 			
 		
 		
-
-		
-		
-	
-
-
-			
-
-		
-
 			</div>
 
 			<!-- Load more -->
@@ -253,4 +262,24 @@
 	<!-- </div> -->
 
 
+
+
+
+	<script>
+		function search(){
+			let searchInput = document.getElementById('search').value.toLowerCase();
+			let brandName = document.getElementsByClassName('brandNameR');
+			let productCard = document.getElementsByClassName('productCard');
+			for(i=0;i<brandName.length;i++){
+				if(brandName[i].innerHTML.trim().toLowerCase().includes(searchInput)){
+					productCard[i].style.display = '';
+				}
+				else{
+					productCard[i].style.display = 'none';
+				}
+			}
+		}
+	</script>
+
 {% endblock %}
+

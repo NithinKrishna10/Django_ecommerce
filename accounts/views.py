@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect,HttpResponseRedirect
 import requests
 from cart.models import CartItem,Cart
 from cart.views import _cart_id
@@ -28,68 +28,42 @@ from .mixins import send_message, send_otp_on_phone
 from django.contrib import messages
 
 def register(request):
+
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             phone_number = form.cleaned_data['phone_number']
+                
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             username = email.split("@")[0]
-            user = Account.objects.create_user(
-                first_name=first_name, last_name=last_name, email=email, username=username, password=password)
-            user.phone_number = phone_number
-            user.save()
-
-            # Create a user profile
-            profile = UserProfile()
-            profile.user_id = user.id
-            profile.profile_picture = 'default/default-user.png'
-            profile.save()
-
-            # USER ACTIVATION
-            # current_site = get_current_site(request)
-            # mail_subject = 'Please activate your account'
-            # message = render_to_string('accounts/account_verification_email.html', {
-            #     'user': user,
-            #     'domain': current_site,
-            #     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            #     'token': default_token_generator.make_token(user),
-            # })
-            # to_email = email
-            # send_email = EmailMessage(mail_subject, message, to=[to_email])
-            # send_email.send()
-            # messages.success(request, 'Thank you for registering with us. We have sent you a verification email to your email address [rathan.kumar@gmail.com]. Please verify it.')
-            return redirect('login_user')
+            if Account.objects.filter(phone_number=phone_number).exists():
+                    print(phone_number)
+                    
+            else:
+                user = Account.objects.create_user(
+                        first_name=first_name, last_name=last_name, email=email, username=username, password=password)
+                user.phone_number = phone_number
+                user.save()
+                # Create a user profile
+                profile = UserProfile()
+                profile.user_id = user.id
+                profile.profile_picture = 'default/default-user.png'
+                profile.email = email
+                profile.phone_number = phone_number
+                profile.save()
+                
+                return redirect('login_user')
     else:
         form = RegistrationForm()
-    context = {
-        'form': form,
-    }
+        context = {
+            'form': form,
+        }
     return render(request, 'accounts/register.html', context)
 
 
-# def login_user(request):
-
-#     if request.method == 'POST':
-#         email = request.POST['email']
-#         password = request.POST['password']
-
-#         user = auth.authenticate(email=email, password=password)
-
-#         if user is not None:
-#             login( user)
-
-#             # request.session['email'] = email
-#             fname = user.first_name
-#             messages.success(request, "Logged In Sucessfully!!")
-#             return redirect('/')
-#         else:
-#             messages.error(request, "wrong details!!")
-#             return redirect('login_user')
-
-#     return render(request, "accounts/login.html")
 
 
 def login_user(request):
@@ -170,74 +144,84 @@ def signout(request):
 
 @login_required(login_url='login')
 def edit_profile(request):
-    userprofile = get_object_or_404(UserProfile, user=request.user)
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = UserProfileForm(
-            request.POST, request.FILES, instance=userprofile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, 'Your profile has been updated.')
-            return redirect('edit_profile')
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = UserProfileForm(instance=userprofile)
-    context = {
-        'user_form': user_form,
-        'profile_form': profile_form,
-        'userprofile': userprofile,
-    }
-    return render(request, 'accounts/edit_profile.html', context)
-
+    try:
+        userprofile = get_object_or_404(UserProfile, user=request.user)
+        if request.method == 'POST':
+            # user_form = UserForm(request.POST, instance=request.user)
+            profile_form = UserProfileForm(
+                request.POST, request.FILES, instance=userprofile)
+            
+            if profile_form.is_valid():
+                # user_form.save()
+                profile_form.save()
+                messages.success(request, 'Your profile has been updated.')
+                return redirect('edit_profile')
+        else:
+            user_form = UserForm(instance=request.user)
+            profile_form = UserProfileForm(instance=userprofile)
+        context = {
+            'user_form': user_form,
+            'profile_form': profile_form,
+            'userprofile': userprofile,
+        }
+        return render(request, 'accounts/edit_profile.html', context)
+    except:
+        pass
 
 @login_required(login_url='login')
 def dashboarduser(request):
-    send_message()
+   
+    try:
+        orders = Orders.objects.order_by(
+            '-created_at').filter(user_id=request.user.id)
+        orders_count = orders.count()
 
-    orders = Orders.objects.order_by(
-        '-created_at').filter(user_id=request.user.id)
-    orders_count = orders.count()
-
-    print(orders_count)
-    userprofile = UserProfile.objects.get(user=request.user.id)
-    context = {
-        'orders_count': orders_count,
-        'userprofile': userprofile,
-    }
+        print(orders_count)
+        userprofile = UserProfile.objects.get(user_id=request.user.id)
+        context = {
+            'orders_count': orders_count,
+            'userprofile': userprofile,
+        }
+    except:
+        pass
     return render(request, 'accounts/dashboard.html', context)
 
 
 @login_required(login_url='login')
 def my_orders(request):
-    orders = Orders.objects.filter(user=request.user).order_by('-created_at')
-    ordersproducts = OrderProducts.objects.all()
-    context = {
-        'orders': orders,
-        'ordersproducts' : ordersproducts
-    }
-    return render(request, 'accounts/my_orders.html', context)
+    try:
+        orders = Orders.objects.filter(user=request.user).order_by('-created_at')
+        ordersproducts = OrderProducts.objects.all()
+        context = {
+            'orders': orders,
+            'ordersproducts' : ordersproducts
+        }
+        return render(request, 'accounts/my_orders.html', context)
+    except:
+        return render(request, 'accounts/my_orders.html')
 
 
 @login_required(login_url='login')
 def order_detail(request, order_id):
+    try:
+        order = Orders.objects.get(id=order_id)
+        # num = order.order_number
+        order_detail = OrderProducts.objects.filter(
+            order_number=order.order_number)
+        subtotal = 0
 
-    order = Orders.objects.get(id=order_id)
-    # num = order.order_number
-    order_detail = OrderProducts.objects.filter(
-        order_number=order.order_number)
-    subtotal = 0
+        for i in order_detail:
+            subtotal += i.product_price * i.quantity
 
-    for i in order_detail:
-        subtotal += i.product_price * i.quantity
-
-    print(subtotal)
-    context = {
-        'order_detail': order_detail,
-        'order': order,
-        'subtotal': subtotal,
-    }
-    return render(request, 'accounts/order_detail.html', context)
+        print(subtotal)
+        context = {
+            'order_detail': order_detail,
+            'order': order,
+            'subtotal': subtotal,
+        }
+        return render(request, 'accounts/order_detail.html', context)
+    except:
+        pass
 
 
 @login_required(login_url='login')
@@ -265,125 +249,48 @@ def orderproducts(request):
 
 
 def address_manage(request):
+    try:
 
-    address = Address.objects.filter(user=request.user)
+        address = Address.objects.filter(user=request.user)
 
-    return render(request, 'accounts/address.html', {'address': address})
-
+        return render(request, 'accounts/address.html', {'address': address})
+    except:
+        pass
 
 def add_address(request):
-    if request.user.is_authenticated:
-  
-        if request.method == 'POST':
-            user = request.user
-            name = request.POST.get('first_name')  
-            address1 = request.POST.get('address_line_1')
-            address2 = request.POST.get('address_line_2')
-            city = request.POST.get('city')
-            phone1 = request.POST.get('phone1')
-            phone2 = request.POST.get('phone2')
-            state = request.POST.get('state')
-            country = request.POST.get('country')
-            pincode = request.POST.get('pincode')
-            print(user)
-            print(name)
-            print(address1)
-            print(address2)
-            print(city)
-            print(phone1)
-            print(phone2)
-            Address.objects.create(user=user,name=name,address1=address1,address2=address2,city=city,phone1=phone1,phone2=phone2,state=state,country=country,pincode=pincode)
-            
-            return redirect('address_manage')
-        #     adform = AddressForm(request.POST, request.FILES)
-        #     print(adform.errors)
-        #     if adform.is_valid():
+    try:
+        if request.user.is_authenticated:
+    
+            if request.method == 'POST':
+                user = request.user
+                name = request.POST.get('first_name')  
+                address1 = request.POST.get('address_line_1')
+                address2 = request.POST.get('address_line_2')
+                city = request.POST.get('city')
+                phone1 = request.POST.get('phone1')
+                phone2 = request.POST.get('phone2')
+                state = request.POST.get('state')
+                country = request.POST.get('country')
+                pincode = request.POST.get('pincode')
+                print(user)
+                print(name)
+                print(address1)
+                print(address2)
+                print(city)
+                print(phone1)
+                print(phone2)
+                Address.objects.create(user=user,name=name,address1=address1,address2=address2,city=city,phone1=phone1,phone2=phone2,state=state,country=country,pincode=pincode)
+                
+                return redirect('address_manage')
+            return render(request, 'accounts/add_address.html')
+        else:
+            return redirect('login_user')
+    except:
+        pass
+ 
 
-        #         adform.save()
-
-        #         return redirect('dashboarduser')
-        #     else:
-        #         print('ytuiowetkii')
-
-        # adform = AddressForm()
-        # context = {
-        #     'adform': adform
-        # }
-        return render(request, 'accounts/add_address.html')
-    else:
-        return redirect('login_user')
 
 #  =s=s=s=s=s=s=s=s=s=s=s=s=s=s=s===================== OTP LOGIN ==============s=s=s=s=s=s=s=s=s=s=s=s=s=s=s=s=s=s=s=s=s=s=
-otp = '0'
-
-
-def user_otp_sign_in(request):
-    '''handle the user otp sign in'''
-    print("user otp ethii")
-    otp_sign_in_user_status = ''
-    if request.method == 'POST':
-        print('helloooo')
-        phone_number = request.POST.get('phone_number')
-        request.session['phone_number'] = phone_number
-        print(phone_number)
-        user = Account.objects.get(phone_number=phone_number).email
-        if Account.objects.filter(phone_number=phone_number).exists():
-            print('heloooo')
-
-            # print(user.email)
-            client = Client('AC1cb3556b8da7c50552bfa5acbe8136c0',
-                                 'e08a6c38c2e9815753a5c3b8fd142442')
-            verification = client.verify \
-                .v2 \
-                .services('VA5f01dd43040a12d2a12bae9bfc681ff0') \
-                .verifications \
-                .create(to='+91{}'.format(phone_number), channel='sms')
-            request.session['user'] = user
-            # user_authentication_status = 'success'
-            print(client)
-            print(verification)
-            status = 'success'
-
-            return JsonResponse({'status': status})
-        else:
-            return render(request, 'accounts/otp_login.html', {'message': "invalid phone number"})
-    else:
-        return render(request, 'accounts/otp_login.html')
-
-# @never_cache
-
-
-def user_otp_sign_in_validation(request):
-    '''handle the user otp validation'''
-    if request.method == 'POST':
-        otp_1 = request.POST.get('otp_1')
-        otp_2 = request.POST.get('otp_2')
-        otp_3 = request.POST.get('otp_3')
-        otp_4 = request.POST.get('otp_4')
-        # var err = document.getElementById('err')
-
-        user_otp = str(otp_1 + otp_2 + otp_3 + otp_4)
-        print(otp)
-        print(user_otp)
-        contact_number = request.session['phone_number']
-        client = Client('AC1cb3556b8da7c50552bfa5acbe8136c0',
-                        'e08a6c38c2e9815753a5c3b8fd142442')
-        verification_check = client.verify \
-            .v2 \
-            .services('VA5f01dd43040a12d2a12bae9bfc681ff0') \
-            .verification_checks \
-            .create(to='+91{}'.format(contact_number), code=user_otp)
-
-        print(verification_check.status)
-        user_authentication_status = 'approved'
-        # user_authentication_status = 'wrong_otp'
-        # if str(user_otp) == str(otp):
-        #     user_authentication_status = 'otp_verified'
-        #     user = Account.objects.get(contact_number = str(request.session['contact_number']))
-        #     request.session['user'] = user.email
-        return JsonResponse({'user_authentication_status': user_authentication_status})
-    return render(request, 'accounts/otp_login_validation.html')
-
 
 def cancelOrder(request):
 
@@ -396,54 +303,60 @@ def cancelOrder(request):
 
 
 def sms_login(request):
-    '''Gets user info for SMS based login'''
-    if request.method == 'POST':
-        global phone_number
-        phone_number = request.POST.get('phone_number')
+    try:
+        '''Gets user info for SMS based login'''
+        if request.method == 'POST':
+            global phone_number1
+            phone_number1 = request.POST.get('phone_number')
 
-        if Account.objects.filter(phone_number=phone_number).exists():
-             user = Account.objects.get(phone_number=phone_number).email
-             client = Client('AC1cb3556b8da7c50552bfa5acbe8136c0',
-                                    'e08a6c38c2e9815753a5c3b8fd142442')
-             verification = client.verify \
-                    .v2 \
-                    .services('VA5f01dd43040a12d2a12bae9bfc681ff0') \
-                    .verifications \
-                    .create(to='+91{}'.format(phone_number), channel='sms')
-             return render(request, 'accounts/otplogin.html')
+            if Account.objects.filter(phone_number=phone_number1).exists():
+                user = Account.objects.get(phone_number=phone_number1).email
+                client = Client('AC1cb3556b8da7c50552bfa5acbe8136c0',
+                                        'e08a6c38c2e9815753a5c3b8fd142442')
+                verification = client.verify \
+                        .v2 \
+                        .services('VA5f01dd43040a12d2a12bae9bfc681ff0') \
+                        .verifications \
+                        .create(to='+91{}'.format(phone_number1), channel='sms')
+                return render(request, 'accounts/otplogin.html')
+            else:
+
+                return render(request, 'accounts/smslogin.html', {'message': "invalid phone"})
+
         else:
-
-            return render(request, 'accounts/smslogin.html', {'message': "invalid phone"})
-
-    else:
-        return render(request, 'accounts/smslogin.html')
+            return render(request, 'accounts/smslogin.html')
+    except:
+        pass
 
 
 def otp_login(request):
-    '''Verifys and Logs in user with SMS OTP'''
-    user = Account.objects.get(phone_number=phone_number)
-    if request.method == 'POST':
-        Otp1 = request.POST.get('otp')
-        client = Client('AC1cb3556b8da7c50552bfa5acbe8136c0',
-                            'e08a6c38c2e9815753a5c3b8fd142442')
-        verification_check = client.verify \
-                .v2 \
-                .services('VA5f01dd43040a12d2a12bae9bfc681ff0') \
-                .verification_checks \
-                .create(to='+91{}'.format(phone_number), code=Otp1)
+    try:
+        '''Verifys and Logs in user with SMS OTP'''
+        user = Account.objects.get(phone_number=phone_number1)
+        if request.method == 'POST':
+            Otp1 = request.POST.get('otp')
+            client = Client('AC1cb3556b8da7c50552bfa5acbe8136c0',
+                                'e08a6c38c2e9815753a5c3b8fd142442')
+            verification_check = client.verify \
+                    .v2 \
+                    .services('VA5f01dd43040a12d2a12bae9bfc681ff0') \
+                    .verification_checks \
+                    .create(to='+91{}'.format(phone_number1), code=Otp1)
 
-        print(verification_check.status, 'hai')
-        if verification_check.status == 'approved':
-            
-            auth.login(request, user)
+            print(verification_check.status, 'hai')
+            if verification_check.status == 'approved':
+                
+                auth.login(request, user)
+            else:
+                messages.error(request, 'otp ithalla')
+                return redirect('otplogin')
+
+            return redirect('home')
+
         else:
-            messages.error(request, 'otp ithalla')
-            return redirect('otplogin')
-
-        return redirect('home')
-
-    else:
-        return render(request, 'accounts/otplogin.html')
+            return render(request, 'accounts/otplogin.html')
+    except:
+        pass
 
 
 def invoice_render_pdf_view(request, *args, **kwargs):

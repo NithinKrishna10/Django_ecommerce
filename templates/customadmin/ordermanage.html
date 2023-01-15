@@ -26,6 +26,7 @@
         <table class="table table-borderless datatable">
           <thead>
             <tr>
+              <th scope="col">Order No</th>
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Phone</th>
@@ -41,9 +42,15 @@
               <!-- <th scope="row"><img class="img-fluid"  src="{{ cr.images.url }}" alt=""></th> -->
               <!-- <th scope="row"><a href="#"></a></th> -->
               <!-- <td>{{ cr.id}}</td> -->
-              <td><a style="text-decoration: none; color: white;" href="{% url 'orderdetail' order.id %}"></a>{{ order.Shipping.name}}</a></td>
-              <td>{{ order.Shipping.user.email}}</td>
-              <td>{{ order.Shipping.phone}}</td>
+              <td>{{ order.order_number}}</td>
+              <td><a style="text-decoration: none; color: white;" href="{% url 'orderdetail' order.id %}"></a>{{ order.Shipping.name}}</a><br>
+              <p>{{ order.Shipping.user.email}}</p>
+              <p>{{ order.Shipping.phone1}}</p>
+              <p></p>
+            </td>
+              <td></td>
+             
+              <td></td>
               <td>{{ order.created_at}}</td>
               <td><span class="badge bg-success">{{ order.status}}</span> <br>
               {% for return in return_order %}
