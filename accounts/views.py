@@ -44,8 +44,8 @@ def register(request):
                     
             else:
                 user = Account.objects.create_user(
-                        first_name=first_name, last_name=last_name, email=email, username=username, password=password)
-                user.phone_number = phone_number
+                        first_name=first_name, last_name=last_name, email=email, username=username, password=password,phone_number = phone_number)
+            
                 user.save()
                 # Create a user profile
                 profile = UserProfile()

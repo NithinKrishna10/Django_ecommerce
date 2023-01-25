@@ -54,7 +54,7 @@ $(document).ready(function () {
             alert("select address")
             return false;
         }
-        else {
+        else {    
 
             $.ajax({
                 type: "GET",
@@ -69,7 +69,7 @@ $(document).ready(function () {
             // console.log("avoo")
             var options = {
                 "key": "rzp_test_wPnfJtBVlSirVZ", // Enter the Key ID generated from the Dashboard
-                "amount": response.grand_total, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "amount": 'response.grand_total', // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
                 "currency": "INR",
                 "name": "BLAZE STORE",
                 "description": "Thank you for buying",

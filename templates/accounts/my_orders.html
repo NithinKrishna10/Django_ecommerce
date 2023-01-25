@@ -64,7 +64,7 @@
 							<p>order Cancelled</p>
 
 							{% elif order.status == 'Delivered' %}
-							<button type="submit" id="cancel-btn"  class="btn btn-outline-info "><a href="{% url 'return_order' order.id %}">Return</a></button>
+							<button type="submit" id="cancel-"  class="btn btn-outline-info "><a href="{% url 'return_order' order.id %}">Return</a></button>
 							{% elif order.status == 'Return Requested' %}
 							<button type="submit" id="cancel-btn"  class="btn btn-outline-info ">Return Requested</button>
 

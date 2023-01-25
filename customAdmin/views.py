@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
-
 from django.template.loader import *
 from django.db.models import Count,Sum
 from .models import SalesReport,sales_report,monthly_sales_report,Categoryoffer,Productoffer
@@ -750,7 +749,6 @@ def offer_category(request):
             print('is exists')
             messages.success(request , 'Offer is exists')
         else:
-            print('no')
             Categoryoffer.objects.create(category=category,discount=discount,is_active=is_active)
             cat=Category.objects.get(category_name=category).pk
             product=Product.objects.filter(category=cat)

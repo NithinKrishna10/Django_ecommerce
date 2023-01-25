@@ -25,7 +25,7 @@
 </div>
 </div> -->
 
-<section style="margin-top: 5%;"> 
+<section style="margin-top: 5%;">
 
 	<!-- Product -->
 
@@ -41,21 +41,21 @@
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 " data-filter="*">
 						<a href="{% url 'store_view' %} " class="filter-link stext-106 trans-04"> All Products</a>
 					</button>
-				
+
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-					<a href="{% url 'price_high' %}" class="filter-link stext-106 trans-04">Price High to Low</a>
+						<a href="{% url 'price_high' %}" class="filter-link stext-106 trans-04">Price High to Low</a>
 					</button>
 					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
 						<a href="{% url 'price_low' %}" class="filter-link stext-106 trans-04">Price Low to High</a>
-						</button>
-						<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-							<a href="{% url 'newest' %}" class="filter-link stext-106 trans-04">Newest First</a>
-							</button>
-					
+					</button>
+					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
+						<a href="{% url 'newest' %}" class="filter-link stext-106 trans-04">Newest First</a>
+					</button>
 
-					
+
+
 				</div>
-				
+
 
 				<div class="flex-w flex-c-m m-tb-10">
 					<!-- <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4">
@@ -70,10 +70,11 @@
 					</div> -->
 
 
-					<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
+					<div
+						class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
 						<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
 						<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						 Filter
+						Filter
 					</div>
 
 					<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
@@ -82,7 +83,7 @@
 						Search
 					</div>
 				</div>
-				
+
 				<!-- Search product -->
 				<div class="dis-none panel-search w-full p-t-10 p-b-15">
 					<div class="bor8 dis-flex p-l-15">
@@ -90,8 +91,9 @@
 							<i class="zmdi zmdi-search"></i>
 						</button>
 
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search" id="search" onkeyup="search()">
-					</div>	
+						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product"
+							placeholder="Search" id="search" onkeyup="search()">
+					</div>
 				</div>
 
 				<!-- Filter -->
@@ -111,7 +113,7 @@
 								</li>
 								{% endfor %}
 
-						
+
 							</ul>
 						</div>
 
@@ -127,8 +129,8 @@
 										{{gen.gender}}
 									</a>
 								</li>
-							 {%	endfor %}
-						
+								{% endfor %}
+
 							</ul>
 						</div>
 
@@ -158,7 +160,7 @@
 									</a>
 								</li>
 
-					
+
 							</ul>
 						</div>
 
@@ -168,23 +170,28 @@
 							</div>
 
 							<div class="flex-w p-t-4 m-r--5">
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+								<a href="#"
+									class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
 									Fashion
 								</a>
 
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+								<a href="#"
+									class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
 									Lifestyle
 								</a>
 
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+								<a href="#"
+									class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
 									Denim
 								</a>
 
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+								<a href="#"
+									class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
 									Streetstyle
 								</a>
 
-								<a href="#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
+								<a href="#"
+									class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
 									Crafts
 								</a>
 							</div>
@@ -198,45 +205,50 @@
 
 			<div class="row isotope-grid">
 
-				{% for product in page_obj.object_list  %}
+				{% for product in page_obj.object_list %}
 				<div class="col-4 col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women productCard">
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
 							<img src="{{ product.images.url }}" alt="IMG-PRODUCT">
 
-							<a href="{{ product.get_url }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 ">
+							<a href="{{ product.get_url }}"
+								class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 ">
 								Quick View
 							</a>
 						</div>
 
 						<div class="block2-txt flex-w flex-t p-t-14">
 							<div class="block2-txt-child1 flex-col-l ">
-								<a href="{{ product.get_url }}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 brandNameR">
+								<a href="{{ product.get_url }}"
+									class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6 brandNameR">
 									{{ product.brand }}
 								</a>
 
 								<span class="stext-105 cl3" style="font-weight: bolder;">
-									₹ {{ product.price }} <span style="font-weight: 100;"><strike>₹ {{product.original_price}}</strike></span>   <span style="color: cadetblue;">
+									₹ {{ product.price }} <span style="font-weight: 100;"><strike>₹
+											{{product.original_price}}</strike></span> <span style="color: cadetblue;">
 										({{ product.offer_percentage }}% OFF)
-									</span> 
+									</span>
 								</span>
 							</div>
 
 							<div class="block2-txt-child2 flex-r p-t-3">
 								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-									<img class="icon-heart1 dis-block trans-04" src="{% static 'main/images/icons/icon-heart-01.png' %}" alt="ICON">
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'main/images/icons/icon-heart-02.png' %}" alt="ICON">
+									<img class="icon-heart1 dis-block trans-04"
+										src="{% static 'main/images/icons/icon-heart-01.png' %}" alt="ICON">
+									<img class="icon-heart2 dis-block trans-04 ab-t-l"
+										src="{% static 'main/images/icons/icon-heart-02.png' %}" alt="ICON">
 								</a>
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
 				{% endfor %}
-			
-		
-		
+
+
+
 			</div>
 
 			<!-- Load more -->
@@ -245,41 +257,42 @@
 	</div>
 
 
+</section>
+<!-- <div style="background-color: chartreuse;"> -->
+<center>
 
-	</section>
-	<!-- <div style="background-color: chartreuse;"> -->
-		<center>
-		
-			{%if page_obj.has_previous %} {# whether the previous page exists #}
-				<a href="?page={{page_obj.previous_page_number}}"><</a> {# link to the prev page #}
+	{%if page_obj.has_previous %} {# whether the previous page exists #}
+	<a href="?page={{page_obj.previous_page_number}}">
+		<< /a> {# link to the prev page #}
 			{% endif %}
-			<span>{{page_obj.number}}</span> {# the current page_obj number #}
-			
+			` <span>{{page_obj.number}}</span> {# the current page_obj number #}
+
 			{%if page_obj.has_next %} {# whether the next page exists #}
-				<a href="?page={{page_obj.next_page_number}}">></a> {# link to the next page #}
+			<a href="?page={{page_obj.next_page_number}}">></a> {# link to the next page #}
 			{% endif %}
-		</center>
-	<!-- </div> -->
+</center>
+<!-- </div> -->
 
 
 
 
 
-	<script>
-		function search(){
-			let searchInput = document.getElementById('search').value.toLowerCase();
-			let brandName = document.getElementsByClassName('brandNameR');
-			let productCard = document.getElementsByClassName('productCard');
-			for(i=0;i<brandName.length;i++){
-				if(brandName[i].innerHTML.trim().toLowerCase().includes(searchInput)){
-					productCard[i].style.display = '';
-				}
-				else{
-					productCard[i].style.display = 'none';
-				}
+<script>
+	function search() {
+		let searchInput = document.getElementById('search').value.toLowerCase();
+		let brandName = document.getElementsByClassName('brandNameR');
+		let productCard = document.getElementsByClassName('productCard');
+		for (i = 0; i < brandName.length; i++) {
+
+			if (brandName[i].innerHTML.trim().toLowerCase().includes(searchInput)) {
+				productCard[i].style.display = '';
+			}
+			else {
+
+				productCard[i].style.display = 'none';
 			}
 		}
-	</script>
+	}
+</script>
 
 {% endblock %}
-

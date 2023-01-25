@@ -10,7 +10,7 @@ current_date = datetime.date.today()
 # Create your models here.
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, first_name, last_name, username, email, password=None):
+    def create_user(self, first_name, last_name, username, email, password=None,**extra_fields):
         if not email:
             raise ValueError('User must have an email address')
 
@@ -19,6 +19,7 @@ class MyAccountManager(BaseUserManager):
 
         user = self.model(
             email = self.normalize_email(email),
+            **extra_fields,
             username = username,
             first_name = first_name,
             last_name = last_name,
@@ -106,7 +107,7 @@ class Address(models.Model):
     def __str__(self):
         return self.user.first_name
 
-
+ 
 class Return_request(models.Model):
     user = models.ForeignKey(Account,on_delete = models.CASCADE)
     order_number = models.CharField(max_length=15,default=1)

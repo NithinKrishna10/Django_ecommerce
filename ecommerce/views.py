@@ -23,3 +23,7 @@ def home(request):
         'cart_count' : cart_count,
     }
     return render(request, 'indexhome.html', context)
+
+def contact(request):
+    
+    return render(request, 'contact.html')
